@@ -1,8 +1,8 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Text } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { HomeScreen } from '../screens/home/HomeScreen';
+import { HistoryScreen } from '../screens/history/HistoryScreen';
 import { SettingsScreen } from '../screens/settings/SettingsScreen';
 import { colors, fonts } from '../lib/constants';
 
@@ -13,14 +13,6 @@ export type AppTabParamList = {
 };
 
 const Tab = createBottomTabNavigator<AppTabParamList>();
-
-function HistoryPlaceholder() {
-  return (
-    <Text style={{ padding: 20, fontFamily: fonts.body }}>
-      Poll History (coming in Phase 4)
-    </Text>
-  );
-}
 
 export function AppTabNavigator() {
   return (
@@ -47,7 +39,7 @@ export function AppTabNavigator() {
       />
       <Tab.Screen
         name="History"
-        component={HistoryPlaceholder}
+        component={HistoryScreen}
         options={{
           title: 'History',
           tabBarIcon: ({ color, size }) => (

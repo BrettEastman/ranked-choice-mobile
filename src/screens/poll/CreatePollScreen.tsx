@@ -28,9 +28,11 @@ export function CreatePollScreen() {
 
   const {
     draftTitle,
+    draftDescription,
     draftCandidates,
     draftMaxRankChoices,
     setDraftTitle,
+    setDraftDescription,
     addDraftCandidate,
     removeDraftCandidate,
     updateDraftCandidate,
@@ -83,6 +85,21 @@ export function CreatePollScreen() {
             onChangeText={setDraftTitle}
             placeholder="What are we voting on?"
             placeholderTextColor={colors.gray[400]}
+          />
+        </View>
+
+        {/* Poll Description (optional) */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Description (optional)</Text>
+          <TextInput
+            style={[styles.titleInput, styles.descriptionInput]}
+            value={draftDescription}
+            onChangeText={setDraftDescription}
+            placeholder="Add details about this poll..."
+            placeholderTextColor={colors.gray[400]}
+            multiline
+            numberOfLines={3}
+            textAlignVertical="top"
           />
         </View>
 
@@ -169,6 +186,10 @@ const styles = StyleSheet.create({
     fontFamily: fonts.body,
     color: colors.gray[800],
     backgroundColor: colors.white,
+  },
+  descriptionInput: {
+    minHeight: 80,
+    paddingTop: spacing.sm,
   },
   addButton: {
     marginTop: spacing.sm,

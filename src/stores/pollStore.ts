@@ -18,12 +18,14 @@ interface PollState {
 
   // Draft state for creating a poll
   draftTitle: string;
+  draftDescription: string;
   draftCandidates: string[];
   draftMaxRankChoices: number;
   draftVoterNames: string[];
 
   // Actions - draft
   setDraftTitle: (title: string) => void;
+  setDraftDescription: (description: string) => void;
   addDraftCandidate: (name: string) => void;
   removeDraftCandidate: (index: number) => void;
   updateDraftCandidate: (index: number, name: string) => void;
@@ -48,11 +50,13 @@ export const usePollStore = create<PollState>((set, get) => ({
   shareCode: null,
 
   draftTitle: '',
+  draftDescription: '',
   draftCandidates: ['', '', ''],
   draftMaxRankChoices: limits.defaultMaxRankChoices,
   draftVoterNames: ['', '', ''],
 
   setDraftTitle: (title) => set({ draftTitle: title }),
+  setDraftDescription: (description) => set({ draftDescription: description }),
 
   addDraftCandidate: (name) =>
     set((state) => ({
@@ -102,6 +106,7 @@ export const usePollStore = create<PollState>((set, get) => ({
     );
 
     const title = state.draftTitle || 'Untitled Poll';
+    const description = state.draftDescription.trim() || null;
 
     // Persist to Supabase
     let supabasePollId: string | null = null;
@@ -120,6 +125,7 @@ export const usePollStore = create<PollState>((set, get) => ({
           .insert({
             creator_id: user.id,
             title,
+            description,
             share_code: shareCode,
             status: 'setup',
             max_rank_choices: maxRank,
@@ -258,6 +264,7 @@ export const usePollStore = create<PollState>((set, get) => ({
       supabasePollId: null,
       shareCode: null,
       draftTitle: '',
+      draftDescription: '',
       draftCandidates: ['', '', ''],
       draftMaxRankChoices: limits.defaultMaxRankChoices,
       draftVoterNames: ['', '', ''],

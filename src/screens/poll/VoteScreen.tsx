@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RankingPicker } from '../../components/RankingPicker';
+import { DraggableRankingPicker } from '../../components/DraggableRankingPicker';
 import { Button } from '../../components/Button';
 import { useAuth } from '../../providers/AuthProvider';
 import { useRealtimePoll } from '../../hooks/useRealtimePoll';
@@ -90,20 +90,9 @@ export function VoteScreen() {
     }
   }, [pollStatus, pollId, navigation]);
 
-  const handleToggleCandidate = useCallback(
-    (candidateName: string) => {
-      setRankings((prev) => {
-        if (prev.includes(candidateName)) {
-          return prev.filter((c) => c !== candidateName);
-        }
-        if (prev.length >= maxRankChoices) {
-          return prev;
-        }
-        return [...prev, candidateName];
-      });
-    },
-    [maxRankChoices]
-  );
+  const handleRankingsChange = useCallback((newRankings: string[]) => {
+    setRankings(newRankings);
+  }, []);
 
   const handleSubmitVote = async () => {
     if (!user || rankings.length === 0) {
@@ -285,11 +274,11 @@ export function VoteScreen() {
         </Text>
       </View>
 
-      <RankingPicker
+      <DraggableRankingPicker
         candidates={candidates.map((c) => c.name)}
         rankings={rankings}
         maxRankChoices={maxRankChoices}
-        onToggleCandidate={handleToggleCandidate}
+        onRankingsChange={handleRankingsChange}
       />
 
       <Button
