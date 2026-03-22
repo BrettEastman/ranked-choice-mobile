@@ -93,10 +93,8 @@ export const usePollStore = create<PollState>((set, get) => ({
   createPoll: async () => {
     const state = get();
     const candidates = state.draftCandidates.filter((c) => c.trim() !== '');
-    const voterNames = state.draftVoterNames.filter((v) => v.trim() !== '');
 
     if (candidates.length < limits.minCandidates) return;
-    if (voterNames.length < limits.minVoters) return;
 
     const maxRank = Math.min(
       state.draftMaxRankChoices,
@@ -123,7 +121,7 @@ export const usePollStore = create<PollState>((set, get) => ({
             creator_id: user.id,
             title,
             share_code: shareCode,
-            status: 'voting',
+            status: 'setup',
             max_rank_choices: maxRank,
           })
           .select()
@@ -166,24 +164,19 @@ export const usePollStore = create<PollState>((set, get) => ({
       console.error('Supabase poll creation failed:', err);
     }
 
-    // Set local state (voting still happens locally for Phase 2)
+    // Set local state
     const poll: LocalPoll = {
       id: supabasePollId ?? String(Date.now()),
       title,
       candidates,
       maxRankChoices: maxRank,
       ballots: [],
-      status: 'voting',
+      status: 'setup',
     };
-
-    const voters: LocalVoter[] = voterNames.map((name) => ({
-      name,
-      hasVoted: false,
-    }));
 
     set({
       currentPoll: poll,
-      voters,
+      voters: [],
       currentVoterIndex: 0,
       supabasePollId,
       shareCode,

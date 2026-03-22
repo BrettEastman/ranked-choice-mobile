@@ -1,14 +1,16 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { CreatePollScreen } from '../screens/poll/CreatePollScreen';
+import { PollLobbyScreen } from '../screens/poll/PollLobbyScreen';
 import { VoteScreen } from '../screens/poll/VoteScreen';
 import { ResultsScreen } from '../screens/poll/ResultsScreen';
-import { colors } from '../lib/constants';
+import { colors, fonts } from '../lib/constants';
 
 export type PollStackParamList = {
   CreatePoll: undefined;
-  Vote: undefined;
-  Results: undefined;
+  PollLobby: { pollId: string; shareCode: string; isCreator: boolean };
+  Vote: { pollId: string };
+  Results: { pollId: string };
 };
 
 const Stack = createNativeStackNavigator<PollStackParamList>();
@@ -19,13 +21,18 @@ export function PollStackNavigator() {
       screenOptions={{
         headerStyle: { backgroundColor: colors.primary },
         headerTintColor: colors.white,
-        headerTitleStyle: { fontWeight: '700' },
+        headerTitleStyle: { fontWeight: '700', fontFamily: fonts.heading },
       }}
     >
       <Stack.Screen
         name="CreatePoll"
         component={CreatePollScreen}
         options={{ title: 'Create Poll' }}
+      />
+      <Stack.Screen
+        name="PollLobby"
+        component={PollLobbyScreen}
+        options={{ title: 'Poll Lobby', headerBackVisible: false }}
       />
       <Stack.Screen
         name="Vote"

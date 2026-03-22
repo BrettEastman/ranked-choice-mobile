@@ -30,34 +30,38 @@ export function CreatePollScreen() {
     draftTitle,
     draftCandidates,
     draftMaxRankChoices,
-    draftVoterNames,
     setDraftTitle,
     addDraftCandidate,
     removeDraftCandidate,
     updateDraftCandidate,
     setDraftMaxRankChoices,
-    addDraftVoter,
-    removeDraftVoter,
-    updateDraftVoter,
     createPoll,
+    supabasePollId,
+    shareCode,
   } = usePollStore();
 
   const validCandidates = draftCandidates.filter((c) => c.trim() !== '');
-  const validVoters = draftVoterNames.filter((v) => v.trim() !== '');
-  const canCreate =
-    validCandidates.length >= limits.minCandidates &&
-    validVoters.length >= limits.minVoters;
+  const canCreate = validCandidates.length >= limits.minCandidates;
 
   const handleCreate = async () => {
     if (!canCreate) {
       Alert.alert(
         'Missing Info',
-        `Need at least ${limits.minCandidates} candidates and ${limits.minVoters} voters.`
+        `Need at least ${limits.minCandidates} candidates.`
       );
       return;
     }
     await createPoll();
-    navigation.navigate('Vote');
+
+    // Get the latest store values after async createPoll
+    const store = usePollStore.getState();
+    if (store.supabasePollId && store.shareCode) {
+      navigation.navigate('PollLobby', {
+        pollId: store.supabasePollId,
+        shareCode: store.shareCode,
+        isCreator: true,
+      });
+    }
   };
 
   return (
@@ -118,30 +122,6 @@ export function CreatePollScreen() {
             onDecrement={() =>
               setDraftMaxRankChoices(draftMaxRankChoices - 1)
             }
-          />
-        </View>
-
-        {/* Voters */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>
-            Voters ({validVoters.length})
-          </Text>
-          {draftVoterNames.map((voter, index) => (
-            <CandidateInput
-              key={index}
-              value={voter}
-              index={index}
-              onChangeText={(text) => updateDraftVoter(index, text)}
-              onRemove={() => removeDraftVoter(index)}
-              canRemove={draftVoterNames.length > limits.minVoters}
-              placeholder={`Voter ${index + 1}`}
-            />
-          ))}
-          <Button
-            title="+ Add Voter"
-            variant="outline"
-            onPress={() => addDraftVoter('')}
-            style={styles.addButton}
           />
         </View>
 

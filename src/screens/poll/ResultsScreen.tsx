@@ -1,31 +1,76 @@
-import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { TypewriterText } from '../../components/TypewriterText';
 import { Button } from '../../components/Button';
+import { supabase } from '../../lib/supabase';
 import { usePollStore } from '../../stores/pollStore';
 import { colors, spacing, fontSizes, fonts } from '../../lib/constants';
 import { RootStackParamList } from '../../navigation/RootNavigator';
+import { PollStackParamList } from '../../navigation/PollStackNavigator';
+import { RoundResult } from '../../types';
 
 type ResultsNavProp = NativeStackNavigationProp<RootStackParamList>;
+type ResultsRouteProp = RouteProp<PollStackParamList, 'Results'>;
+
+interface StoredResult {
+  winner_name: string;
+  rounds_data: RoundResult[];
+  total_votes: number;
+}
 
 export function ResultsScreen() {
   const navigation = useNavigation<ResultsNavProp>();
-  const { currentPoll, resetPoll } = usePollStore();
+  const route = useRoute<ResultsRouteProp>();
+  const { resetPoll } = usePollStore();
+  const { pollId } = route.params;
+
+  const [result, setResult] = useState<StoredResult | null>(null);
+  const [loading, setLoading] = useState(true);
   const [showDetails, setShowDetails] = useState(false);
 
-  const result = currentPoll?.result;
+  useEffect(() => {
+    (async () => {
+      const { data, error } = await supabase
+        .from('poll_results')
+        .select('winner_name, rounds_data, total_votes')
+        .eq('poll_id', pollId)
+        .single();
+
+      if (error) {
+        console.error('Error fetching results:', error);
+      } else if (data) {
+        setResult(data as StoredResult);
+      }
+      setLoading(false);
+    })();
+  }, [pollId]);
 
   const handleNewPoll = () => {
     resetPoll();
     navigation.navigate('AppTabs');
   };
 
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    );
+  }
+
   if (!result) {
     return (
-      <View style={styles.container}>
+      <View style={styles.loadingContainer}>
         <Text style={styles.errorText}>No results available.</Text>
+        <Button title="Go Home" onPress={handleNewPoll} style={styles.homeButton} />
       </View>
     );
   }
@@ -39,7 +84,7 @@ export function ResultsScreen() {
       <View style={styles.winnerSection}>
         <Text style={styles.winnerLabel}>The winner is...</Text>
         <TypewriterText
-          text={result.winner}
+          text={result.winner_name}
           speed={100}
           style={styles.winnerName}
           onComplete={() => setShowDetails(true)}
@@ -51,25 +96,25 @@ export function ResultsScreen() {
         <View style={styles.roundsSection}>
           <Text style={styles.sectionTitle}>Round-by-Round Breakdown</Text>
           <Text style={styles.totalVotes}>
-            Total voters: {result.totalVotes}
+            Total voters: {result.total_votes}
           </Text>
 
-          {result.rounds.map((round) => (
+          {result.rounds_data.map((round) => (
             <View key={round.round} style={styles.roundCard}>
               <Text style={styles.roundTitle}>Round {round.round + 1}</Text>
 
               {round.tallies
                 .sort((a, b) => b.count - a.count)
-                .map((tally) => {
+                .map((tally, idx) => {
                   const percentage =
-                    result.totalVotes > 0
-                      ? (tally.count / result.totalVotes) * 100
+                    result.total_votes > 0
+                      ? (tally.count / result.total_votes) * 100
                       : 0;
                   const isEliminated = tally.name === round.eliminated;
                   const isWinner = tally.name === round.winner;
 
                   return (
-                    <View key={tally.candidateId} style={styles.tallyRow}>
+                    <View key={`${round.round}-${idx}`} style={styles.tallyRow}>
                       <View style={styles.tallyInfo}>
                         <Text
                           style={[
@@ -126,6 +171,12 @@ export function ResultsScreen() {
 }
 
 const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.gray[50],
+  },
   container: {
     flex: 1,
     backgroundColor: colors.gray[50],
@@ -234,5 +285,8 @@ const styles = StyleSheet.create({
     color: colors.secondary,
     textAlign: 'center',
     padding: spacing.xl,
+  },
+  homeButton: {
+    marginTop: spacing.md,
   },
 });
