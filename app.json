@@ -12,7 +12,11 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.beastman.rankedchoicemobile",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -25,6 +29,15 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "52ed6c64-bfe4-4024-a312-e62524fcc376"
+      }
+    },
+    "plugins": [
+      "expo-font",
+      "expo-secure-store"
+    ]
   }
 }

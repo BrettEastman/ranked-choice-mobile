@@ -5,7 +5,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RankingPicker } from '../../components/RankingPicker';
 import { Button } from '../../components/Button';
 import { usePollStore } from '../../stores/pollStore';
-import { colors, spacing, fontSizes } from '../../lib/constants';
+import { colors, spacing, fontSizes, fonts } from '../../lib/constants';
 import { PollStackParamList } from '../../navigation/PollStackNavigator';
 
 type VoteNavProp = NativeStackNavigationProp<PollStackParamList, 'Vote'>;
@@ -128,17 +128,20 @@ const styles = StyleSheet.create({
   },
   voterLabel: {
     fontSize: fontSizes.sm,
+    fontFamily: fonts.body,
     color: colors.gray[500],
     marginBottom: spacing.xs,
   },
   voterName: {
     fontSize: fontSizes.xl,
     fontWeight: '700',
+    fontFamily: fonts.heading,
     color: colors.primary,
     marginBottom: spacing.xs,
   },
   pollTitle: {
     fontSize: fontSizes.md,
+    fontFamily: fonts.body,
     color: colors.gray[600],
   },
   progressContainer: {
@@ -158,6 +161,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: fontSizes.md,
+    fontFamily: fonts.body,
     color: colors.secondary,
     textAlign: 'center',
     padding: spacing.xl,

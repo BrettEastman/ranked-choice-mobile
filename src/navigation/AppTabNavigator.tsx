@@ -1,9 +1,10 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Text } from 'react-native';
+import { Feather } from '@expo/vector-icons';
 import { HomeScreen } from '../screens/home/HomeScreen';
 import { SettingsScreen } from '../screens/settings/SettingsScreen';
-import { colors } from '../lib/constants';
+import { colors, fonts } from '../lib/constants';
 
 export type AppTabParamList = {
   Home: undefined;
@@ -14,7 +15,11 @@ export type AppTabParamList = {
 const Tab = createBottomTabNavigator<AppTabParamList>();
 
 function HistoryPlaceholder() {
-  return <Text style={{ padding: 20 }}>Poll History (coming in Phase 4)</Text>;
+  return (
+    <Text style={{ padding: 20, fontFamily: fonts.body }}>
+      Poll History (coming in Phase 4)
+    </Text>
+  );
 }
 
 export function AppTabNavigator() {
@@ -25,7 +30,8 @@ export function AppTabNavigator() {
         tabBarInactiveTintColor: colors.gray[400],
         headerStyle: { backgroundColor: colors.primary },
         headerTintColor: colors.white,
-        headerTitleStyle: { fontWeight: '700' },
+        headerTitleStyle: { fontWeight: '700', fontFamily: fonts.heading },
+        tabBarLabelStyle: { fontFamily: fonts.body },
       }}
     >
       <Tab.Screen
@@ -35,7 +41,7 @@ export function AppTabNavigator() {
           title: 'Ranked Choice',
           tabBarLabel: 'Home',
           tabBarIcon: ({ color, size }) => (
-            <Text style={{ fontSize: size, color }}>🏠</Text>
+            <Feather name="home" size={size} color={color} />
           ),
         }}
       />
@@ -45,7 +51,7 @@ export function AppTabNavigator() {
         options={{
           title: 'History',
           tabBarIcon: ({ color, size }) => (
-            <Text style={{ fontSize: size, color }}>📋</Text>
+            <Feather name="clock" size={size} color={color} />
           ),
         }}
       />
@@ -55,7 +61,7 @@ export function AppTabNavigator() {
         options={{
           title: 'Settings',
           tabBarIcon: ({ color, size }) => (
-            <Text style={{ fontSize: size, color }}>⚙️</Text>
+            <Feather name="settings" size={size} color={color} />
           ),
         }}
       />

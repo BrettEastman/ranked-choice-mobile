@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Text, TextStyle } from 'react-native';
+import { fonts } from '../lib/constants';
 
 interface TypewriterTextProps {
   text: string;
@@ -34,5 +35,5 @@ export function TypewriterText({
     return () => clearInterval(interval);
   }, [text, speed]);
 
-  return <Text style={style}>{displayedText}</Text>;
+  return <Text style={[{ fontFamily: fonts.mono }, style]}>{displayedText}</Text>;
 }

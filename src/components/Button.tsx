@@ -6,7 +6,7 @@ import {
   ViewStyle,
   TextStyle,
 } from 'react-native';
-import { colors, spacing, fontSizes } from '../lib/constants';
+import { colors, spacing, fontSizes, fonts } from '../lib/constants';
 
 interface ButtonProps {
   title: string;
@@ -73,6 +73,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: fontSizes.md,
     fontWeight: '600',
+    fontFamily: fonts.body,
   },
   filledText: {
     color: colors.white,

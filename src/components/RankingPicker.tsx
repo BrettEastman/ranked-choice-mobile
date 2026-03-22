@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { colors, spacing, fontSizes } from '../lib/constants';
+import { colors, spacing, fontSizes, fonts } from '../lib/constants';
 
 interface RankingPickerProps {
   candidates: string[];
@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
   },
   instruction: {
     fontSize: fontSizes.sm,
+    fontFamily: fonts.body,
     color: colors.gray[500],
     textAlign: 'center',
   },
@@ -163,6 +164,7 @@ const styles = StyleSheet.create({
   candidateText: {
     fontSize: fontSizes.lg,
     fontWeight: '500',
+    fontFamily: fonts.body,
     color: colors.gray[800],
   },
   candidateTextSelected: {

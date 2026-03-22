@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Button } from '../../components/Button';
-import { colors, spacing, fontSizes } from '../../lib/constants';
+import { colors, spacing, fontSizes, fonts } from '../../lib/constants';
 import { RootStackParamList } from '../../navigation/RootNavigator';
 
 type HomeNavProp = NativeStackNavigationProp<RootStackParamList, 'AppTabs'>;
@@ -12,7 +12,10 @@ export function HomeScreen() {
   const navigation = useNavigation<HomeNavProp>();
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.content}
+    >
       <View style={styles.hero}>
         <Text style={styles.title}>Ranked Choice</Text>
         <Text style={styles.subtitle}>
@@ -45,7 +48,7 @@ export function HomeScreen() {
           4. The candidate with majority support wins
         </Text>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -53,7 +56,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.gray[50],
+  },
+  content: {
     padding: spacing.lg,
+    paddingBottom: spacing.xxl,
   },
   hero: {
     alignItems: 'center',
@@ -62,11 +68,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: fontSizes.title,
     fontWeight: '800',
+    fontFamily: fonts.heading,
     color: colors.primary,
     marginBottom: spacing.sm,
   },
   subtitle: {
     fontSize: fontSizes.md,
+    fontFamily: fonts.body,
     color: colors.gray[500],
     textAlign: 'center',
     lineHeight: 24,
@@ -84,11 +92,13 @@ const styles = StyleSheet.create({
   infoTitle: {
     fontSize: fontSizes.lg,
     fontWeight: '700',
+    fontFamily: fonts.heading,
     color: colors.gray[800],
     marginBottom: spacing.sm,
   },
   infoText: {
     fontSize: fontSizes.md,
+    fontFamily: fonts.body,
     color: colors.gray[600],
     lineHeight: 26,
   },

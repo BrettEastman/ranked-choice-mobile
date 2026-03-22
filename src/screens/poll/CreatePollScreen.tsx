@@ -15,7 +15,7 @@ import { CandidateInput } from '../../components/CandidateInput';
 import { CounterControl } from '../../components/CounterControl';
 import { Button } from '../../components/Button';
 import { usePollStore } from '../../stores/pollStore';
-import { colors, spacing, fontSizes, limits } from '../../lib/constants';
+import { colors, spacing, fontSizes, fonts, limits } from '../../lib/constants';
 import { PollStackParamList } from '../../navigation/PollStackNavigator';
 
 type CreatePollNavProp = NativeStackNavigationProp<
@@ -48,7 +48,7 @@ export function CreatePollScreen() {
     validCandidates.length >= limits.minCandidates &&
     validVoters.length >= limits.minVoters;
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     if (!canCreate) {
       Alert.alert(
         'Missing Info',
@@ -56,7 +56,7 @@ export function CreatePollScreen() {
       );
       return;
     }
-    createPoll();
+    await createPoll();
     navigation.navigate('Vote');
   };
 
@@ -175,6 +175,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: fontSizes.lg,
     fontWeight: '700',
+    fontFamily: fonts.heading,
     color: colors.gray[800],
     marginBottom: spacing.sm,
   },
@@ -185,6 +186,7 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.sm,
     paddingHorizontal: spacing.md,
     fontSize: fontSizes.md,
+    fontFamily: fonts.body,
     color: colors.gray[800],
     backgroundColor: colors.white,
   },

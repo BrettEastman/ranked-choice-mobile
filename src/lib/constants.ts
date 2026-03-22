@@ -31,10 +31,10 @@ export const spacing = {
   xxl: 48,
 } as const;
 
-// Typography
+// Typography (matching the original Svelte app)
 export const fonts = {
-  body: 'Courier New',
-  heading: 'System', // Will use system font; can swap for custom later
+  body: 'CutiveMono_400Regular',
+  heading: 'CutiveMono_400Regular',
   mono: 'Courier New',
 } as const;
 

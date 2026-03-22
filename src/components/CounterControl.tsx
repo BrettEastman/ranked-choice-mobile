@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { colors, spacing, fontSizes } from '../lib/constants';
+import { colors, spacing, fontSizes, fonts } from '../lib/constants';
 
 interface CounterControlProps {
   label: string;
@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: fontSizes.md,
     fontWeight: '500',
+    fontFamily: fonts.body,
     color: colors.gray[800],
   },
   controls: {
@@ -87,6 +88,7 @@ const styles = StyleSheet.create({
   value: {
     fontSize: fontSizes.xl,
     fontWeight: '700',
+    fontFamily: fonts.body,
     color: colors.gray[800],
     minWidth: 30,
     textAlign: 'center',

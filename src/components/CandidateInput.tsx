@@ -6,7 +6,7 @@ import {
   Text,
   StyleSheet,
 } from 'react-native';
-import { colors, spacing, fontSizes } from '../lib/constants';
+import { colors, spacing, fontSizes, fonts } from '../lib/constants';
 
 interface CandidateInputProps {
   value: string;
@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.sm,
     paddingHorizontal: spacing.md,
     fontSize: fontSizes.md,
+    fontFamily: fonts.body,
     color: colors.gray[800],
     backgroundColor: colors.white,
   },

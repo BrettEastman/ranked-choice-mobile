@@ -5,7 +5,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { TypewriterText } from '../../components/TypewriterText';
 import { Button } from '../../components/Button';
 import { usePollStore } from '../../stores/pollStore';
-import { colors, spacing, fontSizes } from '../../lib/constants';
+import { colors, spacing, fontSizes, fonts } from '../../lib/constants';
 import { RootStackParamList } from '../../navigation/RootNavigator';
 
 type ResultsNavProp = NativeStackNavigationProp<RootStackParamList>;
@@ -140,12 +140,14 @@ const styles = StyleSheet.create({
   },
   winnerLabel: {
     fontSize: fontSizes.lg,
+    fontFamily: fonts.body,
     color: colors.gray[500],
     marginBottom: spacing.md,
   },
   winnerName: {
     fontSize: fontSizes.title,
     fontWeight: '800',
+    fontFamily: fonts.heading,
     color: colors.primary,
     textAlign: 'center',
   },
@@ -155,11 +157,13 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: fontSizes.lg,
     fontWeight: '700',
+    fontFamily: fonts.heading,
     color: colors.gray[800],
     marginBottom: spacing.xs,
   },
   totalVotes: {
     fontSize: fontSizes.sm,
+    fontFamily: fonts.body,
     color: colors.gray[500],
     marginBottom: spacing.md,
   },
@@ -172,6 +176,7 @@ const styles = StyleSheet.create({
   roundTitle: {
     fontSize: fontSizes.md,
     fontWeight: '700',
+    fontFamily: fonts.heading,
     color: colors.gray[700],
     marginBottom: spacing.sm,
   },
@@ -186,6 +191,7 @@ const styles = StyleSheet.create({
   tallyName: {
     fontSize: fontSizes.sm,
     fontWeight: '500',
+    fontFamily: fonts.body,
     color: colors.gray[800],
   },
   eliminatedName: {
@@ -198,6 +204,7 @@ const styles = StyleSheet.create({
   },
   tallyCount: {
     fontSize: fontSizes.sm,
+    fontFamily: fonts.body,
     color: colors.gray[500],
   },
   barContainer: {
@@ -212,6 +219,7 @@ const styles = StyleSheet.create({
   },
   eliminatedLabel: {
     fontSize: fontSizes.sm,
+    fontFamily: fonts.body,
     color: colors.secondary,
     fontStyle: 'italic',
     marginTop: spacing.xs,
@@ -222,6 +230,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: fontSizes.md,
+    fontFamily: fonts.body,
     color: colors.secondary,
     textAlign: 'center',
     padding: spacing.xl,
