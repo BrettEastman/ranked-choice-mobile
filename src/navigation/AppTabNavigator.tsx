@@ -30,7 +30,7 @@ export function AppTabNavigator() {
         name="Home"
         component={HomeScreen}
         options={{
-          title: 'Ranked Choice',
+          title: 'Home',
           tabBarLabel: 'Home',
           tabBarIcon: ({ color, size }) => (
             <Feather name="home" size={size} color={color} />

@@ -23,6 +23,7 @@ export function HomeScreen() {
   const { user } = useAuth();
   const [joinCode, setJoinCode] = useState('');
   const [joining, setJoining] = useState(false);
+  const [showJoinInput, setShowJoinInput] = useState(false);
 
   const handleJoinPoll = async () => {
     const code = normalizeShareCode(joinCode);
@@ -105,29 +106,38 @@ export function HomeScreen() {
       </View>
 
       <View style={styles.actions}>
+        {/* Join a Poll */}
+        <View style={styles.joinSection}>
+          <Button
+            title="Join a Poll"
+            variant="outline"
+            onPress={() => setShowJoinInput(!showJoinInput)}
+          />
+          {showJoinInput && (
+            <View style={styles.joinInputRow}>
+              <TextInput
+                style={styles.joinInput}
+                value={joinCode}
+                onChangeText={setJoinCode}
+                placeholder="Enter share code"
+                placeholderTextColor={colors.gray[400]}
+                autoCapitalize="characters"
+                autoFocus
+                maxLength={6}
+              />
+              <Button
+                title={joining ? 'Joining...' : 'Go'}
+                onPress={handleJoinPoll}
+                disabled={joining || joinCode.trim().length === 0}
+              />
+            </View>
+          )}
+        </View>
+
         <Button
           title="Create a Poll"
           onPress={() => navigation.navigate('PollFlow')}
         />
-
-        {/* Join a Poll */}
-        <View style={styles.joinSection}>
-          <TextInput
-            style={styles.joinInput}
-            value={joinCode}
-            onChangeText={setJoinCode}
-            placeholder="Enter share code"
-            placeholderTextColor={colors.gray[400]}
-            autoCapitalize="characters"
-            maxLength={6}
-          />
-          <Button
-            title={joining ? 'Joining...' : 'Join a Poll'}
-            variant="outline"
-            onPress={handleJoinPoll}
-            disabled={joining || joinCode.trim().length === 0}
-          />
-        </View>
       </View>
 
       <View style={styles.info}>
@@ -178,7 +188,13 @@ const styles = StyleSheet.create({
   joinSection: {
     gap: spacing.sm,
   },
+  joinInputRow: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    alignItems: 'center',
+  },
   joinInput: {
+    flex: 1,
     borderWidth: 1,
     borderColor: colors.gray[300],
     borderRadius: 8,
