@@ -1,21 +1,21 @@
-import React, { useCallback, useState } from 'react';
+import { Feather } from "@expo/vector-icons";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import React, { useCallback, useState } from "react";
 import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
   ActivityIndicator,
+  FlatList,
   RefreshControl,
-} from 'react-native';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Feather } from '@expo/vector-icons';
-import { supabase } from '../../lib/supabase';
-import { useAuth } from '../../providers/AuthProvider';
-import { colors, fontSizes, fonts } from '../../theme';
-import { spacing } from '../../lib/constants';
-import { RootStackParamList } from '../../navigation/RootNavigator';
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { spacing } from "../../lib/constants";
+import { supabase } from "../../lib/supabase";
+import { RootStackParamList } from "../../navigation/RootNavigator";
+import { useAuth } from "../../providers/AuthProvider";
+import { colors, fontSizes, fonts } from "../../theme";
 
 type HistoryNavProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -41,20 +41,24 @@ export function HistoryScreen() {
 
     // Fetch polls where user is creator or participant
     const { data: participatedPollIds } = await supabase
-      .from('poll_participants')
-      .select('poll_id')
-      .eq('user_id', user.id);
+      .from("poll_participants")
+      .select("poll_id")
+      .eq("user_id", user.id);
 
     const pollIds = (participatedPollIds ?? []).map((p) => p.poll_id);
 
     const { data, error } = await supabase
-      .from('polls')
-      .select('id, title, status, share_code, created_at, closed_at, poll_results(winner_name)')
-      .or(`creator_id.eq.${user.id}${pollIds.length > 0 ? `,id.in.(${pollIds.join(',')})` : ''}`)
-      .order('created_at', { ascending: false });
+      .from("polls")
+      .select(
+        "id, title, status, share_code, created_at, closed_at, poll_results(winner_name)",
+      )
+      .or(
+        `creator_id.eq.${user.id}${pollIds.length > 0 ? `,id.in.(${pollIds.join(",")})` : ""}`,
+      )
+      .order("created_at", { ascending: false });
 
     if (error) {
-      console.error('Error fetching poll history:', error);
+      console.error("Error fetching poll history:", error);
     } else {
       setPolls((data as unknown as PollRow[]) ?? []);
     }
@@ -67,7 +71,7 @@ export function HistoryScreen() {
   useFocusEffect(
     useCallback(() => {
       fetchPolls();
-    }, [fetchPolls])
+    }, [fetchPolls]),
   );
 
   const handleRefresh = () => {
@@ -76,31 +80,35 @@ export function HistoryScreen() {
   };
 
   const handlePollPress = (poll: PollRow) => {
-    if (poll.status === 'closed') {
-      navigation.navigate('PollFlow', {
-        screen: 'Results',
+    if (poll.status === "closed") {
+      navigation.navigate("PollFlow", {
+        screen: "Results",
         params: { pollId: poll.id },
       } as any);
-    } else if (poll.status === 'voting') {
-      navigation.navigate('PollFlow', {
-        screen: 'Vote',
+    } else if (poll.status === "voting") {
+      navigation.navigate("PollFlow", {
+        screen: "Vote",
         params: { pollId: poll.id },
       } as any);
     } else {
-      navigation.navigate('PollFlow', {
-        screen: 'PollLobby',
-        params: { pollId: poll.id, shareCode: poll.share_code, isCreator: true },
+      navigation.navigate("PollFlow", {
+        screen: "PollLobby",
+        params: {
+          pollId: poll.id,
+          shareCode: poll.share_code,
+          isCreator: true,
+        },
       } as any);
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'setup':
+      case "setup":
         return colors.gray[400];
-      case 'voting':
+      case "voting":
         return colors.primary;
-      case 'closed':
+      case "closed":
         return colors.secondary;
       default:
         return colors.gray[400];
@@ -109,12 +117,12 @@ export function HistoryScreen() {
 
   const getStatusLabel = (status: string) => {
     switch (status) {
-      case 'setup':
-        return 'Waiting';
-      case 'voting':
-        return 'In Progress';
-      case 'closed':
-        return 'Completed';
+      case "setup":
+        return "Waiting";
+      case "voting":
+        return "In Progress";
+      case "closed":
+        return "Completed";
       default:
         return status;
     }
@@ -122,10 +130,10 @@ export function HistoryScreen() {
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
-    return date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
     });
   };
 
@@ -148,7 +156,7 @@ export function HistoryScreen() {
           <View
             style={[
               styles.statusBadge,
-              { backgroundColor: getStatusColor(item.status) + '20' },
+              { backgroundColor: getStatusColor(item.status) + "20" },
             ]}
           >
             <Text
@@ -229,8 +237,8 @@ const styles = StyleSheet.create({
   },
   centered: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: colors.gray[50],
   },
   listContent: {
@@ -245,17 +253,17 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: spacing.md,
     marginBottom: spacing.sm,
-    position: 'relative',
+    position: "relative",
   },
   pollHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: spacing.xs,
   },
   pollTitle: {
     fontSize: fontSizes.md,
-    fontWeight: '600',
+    fontWeight: "600",
     fontFamily: fonts.heading,
     color: colors.gray[800],
     flex: 1,
@@ -268,11 +276,11 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: "600",
     fontFamily: fonts.body,
   },
   pollMeta: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: spacing.md,
     marginBottom: spacing.xs,
   },
@@ -287,31 +295,31 @@ const styles = StyleSheet.create({
     color: colors.gray[400],
   },
   winnerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: spacing.xs,
     marginTop: spacing.xs,
   },
   winnerText: {
     fontSize: fontSizes.sm,
     fontFamily: fonts.body,
-    fontWeight: '600',
+    fontWeight: "600",
     color: colors.primaryDark,
   },
   chevron: {
-    position: 'absolute',
+    position: "absolute",
     right: spacing.md,
-    top: '50%',
+    top: "50%",
   },
   emptyState: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     padding: spacing.xxl,
   },
   emptyTitle: {
     fontSize: fontSizes.lg,
-    fontWeight: '600',
+    fontWeight: "600",
     fontFamily: fonts.heading,
     color: colors.gray[500],
     marginTop: spacing.md,
@@ -320,7 +328,7 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.md,
     fontFamily: fonts.body,
     color: colors.gray[400],
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: spacing.xs,
   },
 });

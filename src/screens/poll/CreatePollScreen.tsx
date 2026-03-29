@@ -1,27 +1,27 @@
-import React from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import React from "react";
 import {
-  View,
-  Text,
-  TextInput,
-  ScrollView,
-  StyleSheet,
   Alert,
   KeyboardAvoidingView,
   Platform,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { CandidateInput } from '../../components/CandidateInput';
-import { CounterControl } from '../../components/CounterControl';
-import { Button } from '../../components/Button';
-import { usePollStore } from '../../stores/pollStore';
-import { colors, fontSizes, fonts } from '../../theme';
-import { spacing, limits } from '../../lib/constants';
-import { PollStackParamList } from '../../navigation/PollStackNavigator';
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import { Button } from "../../components/Button";
+import { CandidateInput } from "../../components/CandidateInput";
+import { CounterControl } from "../../components/CounterControl";
+import { limits, spacing } from "../../lib/constants";
+import { PollStackParamList } from "../../navigation/PollStackNavigator";
+import { usePollStore } from "../../stores/pollStore";
+import { colors, fontSizes, fonts } from "../../theme";
 
 type CreatePollNavProp = NativeStackNavigationProp<
   PollStackParamList,
-  'CreatePoll'
+  "CreatePoll"
 >;
 
 export function CreatePollScreen() {
@@ -43,14 +43,14 @@ export function CreatePollScreen() {
     shareCode,
   } = usePollStore();
 
-  const validCandidates = draftCandidates.filter((c) => c.trim() !== '');
+  const validCandidates = draftCandidates.filter((c) => c.trim() !== "");
   const canCreate = validCandidates.length >= limits.minCandidates;
 
   const handleCreate = async () => {
     if (!canCreate) {
       Alert.alert(
-        'Missing Info',
-        `Need at least ${limits.minCandidates} candidates.`
+        "Missing Info",
+        `Need at least ${limits.minCandidates} candidates.`,
       );
       return;
     }
@@ -59,7 +59,7 @@ export function CreatePollScreen() {
     // Get the latest store values after async createPoll
     const store = usePollStore.getState();
     if (store.supabasePollId && store.shareCode) {
-      navigation.navigate('PollLobby', {
+      navigation.navigate("PollLobby", {
         pollId: store.supabasePollId,
         shareCode: store.shareCode,
         isCreator: true,
@@ -70,7 +70,7 @@ export function CreatePollScreen() {
   return (
     <KeyboardAvoidingView
       style={styles.flex}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <ScrollView
         style={styles.container}
@@ -122,7 +122,7 @@ export function CreatePollScreen() {
           <Button
             title="+ Add Candidate"
             variant="outline"
-            onPress={() => addDraftCandidate('')}
+            onPress={() => addDraftCandidate("")}
             style={styles.addButton}
           />
         </View>
@@ -134,12 +134,8 @@ export function CreatePollScreen() {
             value={draftMaxRankChoices}
             min={1}
             max={Math.max(validCandidates.length - 1, 1)}
-            onIncrement={() =>
-              setDraftMaxRankChoices(draftMaxRankChoices + 1)
-            }
-            onDecrement={() =>
-              setDraftMaxRankChoices(draftMaxRankChoices - 1)
-            }
+            onIncrement={() => setDraftMaxRankChoices(draftMaxRankChoices + 1)}
+            onDecrement={() => setDraftMaxRankChoices(draftMaxRankChoices - 1)}
           />
         </View>
 
@@ -172,7 +168,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: fontSizes.lg,
-    fontWeight: '700',
+    fontWeight: "700",
     fontFamily: fonts.heading,
     color: colors.gray[800],
     marginBottom: spacing.sm,

@@ -1,35 +1,35 @@
-import React, { useState } from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import React, { useState } from "react";
 import {
-  View,
-  Text,
-  TextInput,
+  Alert,
   ScrollView,
   StyleSheet,
-  Alert,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Button } from '../../components/Button';
-import { supabase } from '../../lib/supabase';
-import { normalizeShareCode } from '../../lib/shareCode';
-import { useAuth } from '../../providers/AuthProvider';
-import { colors, fontSizes, fonts } from '../../theme';
-import { spacing } from '../../lib/constants';
-import { RootStackParamList } from '../../navigation/RootNavigator';
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import { Button } from "../../components/Button";
+import { spacing } from "../../lib/constants";
+import { normalizeShareCode } from "../../lib/shareCode";
+import { supabase } from "../../lib/supabase";
+import { RootStackParamList } from "../../navigation/RootNavigator";
+import { useAuth } from "../../providers/AuthProvider";
+import { colors, fontSizes, fonts } from "../../theme";
 
-type HomeNavProp = NativeStackNavigationProp<RootStackParamList, 'AppTabs'>;
+type HomeNavProp = NativeStackNavigationProp<RootStackParamList, "AppTabs">;
 
 export function HomeScreen() {
   const navigation = useNavigation<HomeNavProp>();
   const { user } = useAuth();
-  const [joinCode, setJoinCode] = useState('');
+  const [joinCode, setJoinCode] = useState("");
   const [joining, setJoining] = useState(false);
   const [showJoinInput, setShowJoinInput] = useState(false);
 
   const handleJoinPoll = async () => {
     const code = normalizeShareCode(joinCode);
     if (code.length === 0) {
-      Alert.alert('Enter a Code', 'Please enter the poll share code.');
+      Alert.alert("Enter a Code", "Please enter the poll share code.");
       return;
     }
 
@@ -38,19 +38,22 @@ export function HomeScreen() {
     try {
       // Look up the poll
       const { data: poll, error: pollError } = await supabase
-        .from('polls')
-        .select('id, status, creator_id')
-        .eq('share_code', code)
+        .from("polls")
+        .select("id, status, creator_id")
+        .eq("share_code", code)
         .single();
 
       if (pollError || !poll) {
-        Alert.alert('Poll Not Found', 'No poll found with that code. Check the code and try again.');
+        Alert.alert(
+          "Poll Not Found",
+          "No poll found with that code. Check the code and try again.",
+        );
         setJoining(false);
         return;
       }
 
-      if (poll.status === 'closed') {
-        Alert.alert('Poll Closed', 'This poll has already ended.');
+      if (poll.status === "closed") {
+        Alert.alert("Poll Closed", "This poll has already ended.");
         setJoining(false);
         return;
       }
@@ -58,46 +61,43 @@ export function HomeScreen() {
       // Join as participant (ignore error if already joined)
       if (user) {
         const { error: joinError } = await supabase
-          .from('poll_participants')
+          .from("poll_participants")
           .upsert(
             { poll_id: poll.id, user_id: user.id },
-            { onConflict: 'poll_id,user_id' }
+            { onConflict: "poll_id,user_id" },
           );
 
         if (joinError) {
-          console.error('Error joining poll:', joinError);
+          console.error("Error joining poll:", joinError);
         }
       }
 
-      setJoinCode('');
+      setJoinCode("");
 
       // Navigate to lobby or directly to vote depending on poll status
       const isCreator = poll.creator_id === user?.id;
 
-      if (poll.status === 'voting') {
-        navigation.navigate('PollFlow', {
-          screen: 'Vote',
+      if (poll.status === "voting") {
+        navigation.navigate("PollFlow", {
+          screen: "Vote",
           params: { pollId: poll.id },
         } as any);
       } else {
-        navigation.navigate('PollFlow', {
-          screen: 'PollLobby',
+        navigation.navigate("PollFlow", {
+          screen: "PollLobby",
           params: { pollId: poll.id, shareCode: code, isCreator },
         } as any);
       }
     } catch (err) {
-      console.error('Join poll error:', err);
-      Alert.alert('Error', 'Something went wrong. Please try again.');
+      console.error("Join poll error:", err);
+      Alert.alert("Error", "Something went wrong. Please try again.");
     }
 
     setJoining(false);
   };
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.content}
-    >
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.hero}>
         <Text style={styles.title}>Ranked Choice</Text>
         <Text style={styles.subtitle}>
@@ -127,7 +127,7 @@ export function HomeScreen() {
                 maxLength={6}
               />
               <Button
-                title={joining ? 'Joining...' : 'Go'}
+                title={joining ? "Joining..." : "Go"}
                 onPress={handleJoinPoll}
                 disabled={joining || joinCode.trim().length === 0}
               />
@@ -137,17 +137,17 @@ export function HomeScreen() {
 
         <Button
           title="Create a Poll"
-          onPress={() => navigation.navigate('PollFlow')}
+          onPress={() => navigation.navigate("PollFlow")}
         />
       </View>
 
       <View style={styles.info}>
         <Text style={styles.infoTitle}>How it works</Text>
         <Text style={styles.infoText}>
-          1. Create a poll with candidates{'\n'}
-          2. Share the code with voters{'\n'}
-          3. Each voter ranks their top choices{'\n'}
-          4. Votes are tallied using instant runoff{'\n'}
+          1. Create a poll with candidates{"\n"}
+          2. Share the code with voters{"\n"}
+          3. Each voter ranks their top choices{"\n"}
+          4. Votes are tallied using instant runoff{"\n"}
           5. The candidate with majority support wins
         </Text>
       </View>
@@ -165,12 +165,12 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.xxl,
   },
   hero: {
-    alignItems: 'center',
-    paddingVertical: spacing.xxl,
+    alignItems: "center",
+    paddingVertical: spacing.xl,
   },
   title: {
     fontSize: fontSizes.title,
-    fontWeight: '800',
+    fontWeight: "800",
     fontFamily: fonts.heading,
     color: colors.primary,
     marginBottom: spacing.sm,
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.md,
     fontFamily: fonts.body,
     color: colors.gray[500],
-    textAlign: 'center',
+    textAlign: "center",
     lineHeight: 24,
   },
   actions: {
@@ -190,9 +190,9 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   joinInputRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: spacing.sm,
-    alignItems: 'center',
+    alignItems: "center",
   },
   joinInput: {
     flex: 1,
@@ -205,24 +205,24 @@ const styles = StyleSheet.create({
     fontFamily: fonts.mono,
     color: colors.gray[800],
     backgroundColor: colors.white,
-    textAlign: 'center',
+    textAlign: "center",
     letterSpacing: 4,
   },
   info: {
     backgroundColor: colors.white,
     borderRadius: 12,
-    padding: spacing.lg,
-    marginTop: spacing.lg,
+    padding: spacing.md,
+    marginTop: spacing.md,
   },
   infoTitle: {
     fontSize: fontSizes.lg,
-    fontWeight: '700',
+    fontWeight: "700",
     fontFamily: fonts.heading,
     color: colors.gray[800],
     marginBottom: spacing.sm,
   },
   infoText: {
-    fontSize: fontSizes.md,
+    fontSize: fontSizes.sm,
     fontFamily: fonts.body,
     color: colors.gray[600],
     lineHeight: 26,

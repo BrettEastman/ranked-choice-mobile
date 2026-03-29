@@ -1,8 +1,7 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { AppState } from 'react-native';
-import { Session, User } from '@supabase/supabase-js';
-import * as Linking from 'expo-linking';
-import { supabase } from '../lib/supabase';
+import { Session, User } from "@supabase/supabase-js";
+import * as Linking from "expo-linking";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { supabase } from "../lib/supabase";
 
 interface AuthContextType {
   session: Session | null;
@@ -11,12 +10,9 @@ interface AuthContextType {
   signUp: (
     email: string,
     password: string,
-    displayName: string
+    displayName: string,
   ) => Promise<{ error: Error | null }>;
-  signIn: (
-    email: string,
-    password: string
-  ) => Promise<{ error: Error | null }>;
+  signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
 }
 
@@ -32,7 +28,7 @@ const AuthContext = createContext<AuthContextType>({
 export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 }
@@ -58,13 +54,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Handle deep link for email confirmation
     const handleDeepLink = async (event: { url: string }) => {
       const url = event.url;
-      if (url.includes('access_token') || url.includes('refresh_token')) {
+      if (url.includes("access_token") || url.includes("refresh_token")) {
         // Extract the fragment (everything after #)
-        const fragment = url.split('#')[1];
+        const fragment = url.split("#")[1];
         if (fragment) {
           const params = new URLSearchParams(fragment);
-          const accessToken = params.get('access_token');
-          const refreshToken = params.get('refresh_token');
+          const accessToken = params.get("access_token");
+          const refreshToken = params.get("refresh_token");
           if (accessToken && refreshToken) {
             await supabase.auth.setSession({
               access_token: accessToken,
@@ -76,7 +72,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     // Listen for incoming deep links
-    const linkingSub = Linking.addEventListener('url', handleDeepLink);
+    const linkingSub = Linking.addEventListener("url", handleDeepLink);
 
     // Check if the app was opened via a deep link
     Linking.getInitialURL().then((url) => {
@@ -92,9 +88,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signUp = async (
     email: string,
     password: string,
-    displayName: string
+    displayName: string,
   ) => {
-    const redirectUrl = Linking.createURL('auth-callback');
+    const redirectUrl = Linking.createURL("auth-callback");
     const { error } = await supabase.auth.signUp({
       email,
       password,

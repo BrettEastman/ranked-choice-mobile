@@ -1,25 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import React, { useEffect, useState } from "react";
 import {
-  View,
-  Text,
+  ActivityIndicator,
   ScrollView,
   StyleSheet,
-  ActivityIndicator,
-} from 'react-native';
-import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { TypewriterText } from '../../components/TypewriterText';
-import { Button } from '../../components/Button';
-import { supabase } from '../../lib/supabase';
-import { usePollStore } from '../../stores/pollStore';
-import { colors, fontSizes, fonts } from '../../theme';
-import { spacing } from '../../lib/constants';
-import { RootStackParamList } from '../../navigation/RootNavigator';
-import { PollStackParamList } from '../../navigation/PollStackNavigator';
-import { RoundResult } from '../../types';
+  Text,
+  View,
+} from "react-native";
+import { Button } from "../../components/Button";
+import { TypewriterText } from "../../components/TypewriterText";
+import { spacing } from "../../lib/constants";
+import { supabase } from "../../lib/supabase";
+import { PollStackParamList } from "../../navigation/PollStackNavigator";
+import { RootStackParamList } from "../../navigation/RootNavigator";
+import { usePollStore } from "../../stores/pollStore";
+import { colors, fontSizes, fonts } from "../../theme";
+import { RoundResult } from "../../types";
 
 type ResultsNavProp = NativeStackNavigationProp<RootStackParamList>;
-type ResultsRouteProp = RouteProp<PollStackParamList, 'Results'>;
+type ResultsRouteProp = RouteProp<PollStackParamList, "Results">;
 
 interface StoredResult {
   winner_name: string;
@@ -40,13 +40,13 @@ export function ResultsScreen() {
   useEffect(() => {
     (async () => {
       const { data, error } = await supabase
-        .from('poll_results')
-        .select('winner_name, rounds_data, total_votes')
-        .eq('poll_id', pollId)
+        .from("poll_results")
+        .select("winner_name, rounds_data, total_votes")
+        .eq("poll_id", pollId)
         .single();
 
       if (error) {
-        console.error('Error fetching results:', error);
+        console.error("Error fetching results:", error);
       } else if (data) {
         setResult(data as StoredResult);
       }
@@ -56,7 +56,7 @@ export function ResultsScreen() {
 
   const handleNewPoll = () => {
     resetPoll();
-    navigation.navigate('AppTabs');
+    navigation.navigate("AppTabs");
   };
 
   if (loading) {
@@ -71,16 +71,17 @@ export function ResultsScreen() {
     return (
       <View style={styles.loadingContainer}>
         <Text style={styles.errorText}>No results available.</Text>
-        <Button title="Go Home" onPress={handleNewPoll} style={styles.homeButton} />
+        <Button
+          title="Go Home"
+          onPress={handleNewPoll}
+          style={styles.homeButton}
+        />
       </View>
     );
   }
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.content}
-    >
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       {/* Winner announcement */}
       <View style={styles.winnerSection}>
         <Text style={styles.winnerLabel}>The winner is...</Text>
@@ -125,11 +126,11 @@ export function ResultsScreen() {
                           ]}
                         >
                           {tally.name}
-                          {isEliminated ? ' (eliminated)' : ''}
-                          {isWinner ? ' (winner!)' : ''}
+                          {isEliminated ? " (eliminated)" : ""}
+                          {isWinner ? " (winner!)" : ""}
                         </Text>
                         <Text style={styles.tallyCount}>
-                          {tally.count} vote{tally.count !== 1 ? 's' : ''}
+                          {tally.count} vote{tally.count !== 1 ? "s" : ""}
                         </Text>
                       </View>
                       <View style={styles.barContainer}>
@@ -174,8 +175,8 @@ export function ResultsScreen() {
 const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: colors.gray[50],
   },
   container: {
@@ -187,7 +188,7 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.xxl,
   },
   winnerSection: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: spacing.xxl,
   },
   winnerLabel: {
@@ -198,17 +199,17 @@ const styles = StyleSheet.create({
   },
   winnerName: {
     fontSize: fontSizes.title,
-    fontWeight: '800',
+    fontWeight: "800",
     fontFamily: fonts.heading,
     color: colors.primary,
-    textAlign: 'center',
+    textAlign: "center",
   },
   roundsSection: {
     marginTop: spacing.lg,
   },
   sectionTitle: {
     fontSize: fontSizes.lg,
-    fontWeight: '700',
+    fontWeight: "700",
     fontFamily: fonts.heading,
     color: colors.gray[800],
     marginBottom: spacing.xs,
@@ -227,7 +228,7 @@ const styles = StyleSheet.create({
   },
   roundTitle: {
     fontSize: fontSizes.md,
-    fontWeight: '700',
+    fontWeight: "700",
     fontFamily: fonts.heading,
     color: colors.gray[700],
     marginBottom: spacing.sm,
@@ -236,23 +237,23 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   tallyInfo: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 4,
   },
   tallyName: {
     fontSize: fontSizes.sm,
-    fontWeight: '500',
+    fontWeight: "500",
     fontFamily: fonts.body,
     color: colors.gray[800],
   },
   eliminatedName: {
     color: colors.gray[400],
-    textDecorationLine: 'line-through',
+    textDecorationLine: "line-through",
   },
   winnerTallyName: {
     color: colors.primaryDark,
-    fontWeight: '700',
+    fontWeight: "700",
   },
   tallyCount: {
     fontSize: fontSizes.sm,
@@ -263,17 +264,17 @@ const styles = StyleSheet.create({
     height: 8,
     backgroundColor: colors.gray[100],
     borderRadius: 4,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   bar: {
-    height: '100%',
+    height: "100%",
     borderRadius: 4,
   },
   eliminatedLabel: {
     fontSize: fontSizes.sm,
     fontFamily: fonts.body,
     color: colors.secondary,
-    fontStyle: 'italic',
+    fontStyle: "italic",
     marginTop: spacing.xs,
   },
   actions: {
@@ -284,7 +285,7 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.md,
     fontFamily: fonts.body,
     color: colors.secondary,
-    textAlign: 'center',
+    textAlign: "center",
     padding: spacing.xl,
   },
   homeButton: {

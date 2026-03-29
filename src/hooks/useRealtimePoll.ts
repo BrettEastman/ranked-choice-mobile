@@ -1,5 +1,5 @@
-import { useEffect, useState, useCallback } from 'react';
-import { supabase } from '../lib/supabase';
+import { useCallback, useEffect, useState } from "react";
+import { supabase } from "../lib/supabase";
 
 interface Participant {
   id: string;
@@ -10,12 +10,12 @@ interface Participant {
 }
 
 interface PollStatus {
-  status: 'setup' | 'voting' | 'closed';
+  status: "setup" | "voting" | "closed";
 }
 
 export function useRealtimePoll(pollId: string | null) {
   const [participants, setParticipants] = useState<Participant[]>([]);
-  const [pollStatus, setPollStatus] = useState<PollStatus>({ status: 'setup' });
+  const [pollStatus, setPollStatus] = useState<PollStatus>({ status: "setup" });
   const [loading, setLoading] = useState(true);
 
   // Fetch participants with display names
@@ -23,20 +23,20 @@ export function useRealtimePoll(pollId: string | null) {
     if (!pollId) return;
 
     const { data, error } = await supabase
-      .from('poll_participants')
-      .select('id, user_id, has_voted, joined_at, profiles(display_name)')
-      .eq('poll_id', pollId)
-      .order('joined_at');
+      .from("poll_participants")
+      .select("id, user_id, has_voted, joined_at, profiles(display_name)")
+      .eq("poll_id", pollId)
+      .order("joined_at");
 
     if (error) {
-      console.error('Error fetching participants:', error);
+      console.error("Error fetching participants:", error);
       return;
     }
 
     const mapped: Participant[] = (data ?? []).map((row: any) => ({
       id: row.id,
       user_id: row.user_id,
-      display_name: row.profiles?.display_name ?? 'Unknown',
+      display_name: row.profiles?.display_name ?? "Unknown",
       has_voted: row.has_voted,
       joined_at: row.joined_at,
     }));
@@ -50,18 +50,18 @@ export function useRealtimePoll(pollId: string | null) {
     if (!pollId) return;
 
     const { data, error } = await supabase
-      .from('polls')
-      .select('status')
-      .eq('id', pollId)
+      .from("polls")
+      .select("status")
+      .eq("id", pollId)
       .single();
 
     if (error) {
-      console.error('Error fetching poll status:', error);
+      console.error("Error fetching poll status:", error);
       return;
     }
 
     if (data) {
-      setPollStatus({ status: data.status as PollStatus['status'] });
+      setPollStatus({ status: data.status as PollStatus["status"] });
     }
   }, [pollId]);
 
@@ -76,17 +76,17 @@ export function useRealtimePoll(pollId: string | null) {
     const participantChannel = supabase
       .channel(`poll-participants-${pollId}`)
       .on(
-        'postgres_changes',
+        "postgres_changes",
         {
-          event: '*',
-          schema: 'public',
-          table: 'poll_participants',
+          event: "*",
+          schema: "public",
+          table: "poll_participants",
           filter: `poll_id=eq.${pollId}`,
         },
         () => {
           // Re-fetch on any change (insert, update)
           fetchParticipants();
-        }
+        },
       )
       .subscribe();
 
@@ -94,20 +94,20 @@ export function useRealtimePoll(pollId: string | null) {
     const pollChannel = supabase
       .channel(`poll-status-${pollId}`)
       .on(
-        'postgres_changes',
+        "postgres_changes",
         {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'polls',
+          event: "UPDATE",
+          schema: "public",
+          table: "polls",
           filter: `id=eq.${pollId}`,
         },
         (payload) => {
-          if (payload.new && 'status' in payload.new) {
+          if (payload.new && "status" in payload.new) {
             setPollStatus({
-              status: payload.new.status as PollStatus['status'],
+              status: payload.new.status as PollStatus["status"],
             });
           }
-        }
+        },
       )
       .subscribe();
 

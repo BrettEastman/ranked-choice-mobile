@@ -1,26 +1,26 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import React, { useCallback, useEffect, useState } from "react";
 import {
-  View,
-  Text,
+  ActivityIndicator,
+  Alert,
   ScrollView,
   StyleSheet,
-  Alert,
-  ActivityIndicator,
-} from 'react-native';
-import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { DraggableRankingPicker } from '../../components/DraggableRankingPicker';
-import { Button } from '../../components/Button';
-import { useAuth } from '../../providers/AuthProvider';
-import { useRealtimePoll } from '../../hooks/useRealtimePoll';
-import { supabase } from '../../lib/supabase';
-import { calculateWinner } from '../../lib/calculateWinner';
-import { colors, fontSizes, fonts } from '../../theme';
-import { spacing } from '../../lib/constants';
-import { PollStackParamList } from '../../navigation/PollStackNavigator';
+  Text,
+  View,
+} from "react-native";
+import { Button } from "../../components/Button";
+import { DraggableRankingPicker } from "../../components/DraggableRankingPicker";
+import { useRealtimePoll } from "../../hooks/useRealtimePoll";
+import { calculateWinner } from "../../lib/calculateWinner";
+import { spacing } from "../../lib/constants";
+import { supabase } from "../../lib/supabase";
+import { PollStackParamList } from "../../navigation/PollStackNavigator";
+import { useAuth } from "../../providers/AuthProvider";
+import { colors, fontSizes, fonts } from "../../theme";
 
-type VoteNavProp = NativeStackNavigationProp<PollStackParamList, 'Vote'>;
-type VoteRouteProp = RouteProp<PollStackParamList, 'Vote'>;
+type VoteNavProp = NativeStackNavigationProp<PollStackParamList, "Vote">;
+type VoteRouteProp = RouteProp<PollStackParamList, "Vote">;
 
 interface CandidateRow {
   id: string;
@@ -38,7 +38,7 @@ export function VoteScreen() {
 
   const [candidates, setCandidates] = useState<CandidateRow[]>([]);
   const [maxRankChoices, setMaxRankChoices] = useState(3);
-  const [pollTitle, setPollTitle] = useState('');
+  const [pollTitle, setPollTitle] = useState("");
   const [rankings, setRankings] = useState<string[]>([]);
   const [hasVoted, setHasVoted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -49,9 +49,9 @@ export function VoteScreen() {
   useEffect(() => {
     (async () => {
       const { data: poll } = await supabase
-        .from('polls')
-        .select('title, max_rank_choices, creator_id')
-        .eq('id', pollId)
+        .from("polls")
+        .select("title, max_rank_choices, creator_id")
+        .eq("id", pollId)
         .single();
 
       if (poll) {
@@ -61,20 +61,20 @@ export function VoteScreen() {
       }
 
       const { data: cands } = await supabase
-        .from('candidates')
-        .select('id, name, position')
-        .eq('poll_id', pollId)
-        .order('position');
+        .from("candidates")
+        .select("id, name, position")
+        .eq("poll_id", pollId)
+        .order("position");
 
       if (cands) setCandidates(cands as CandidateRow[]);
 
       // Check if user already voted
       if (user) {
         const { data: participation } = await supabase
-          .from('poll_participants')
-          .select('has_voted')
-          .eq('poll_id', pollId)
-          .eq('user_id', user.id)
+          .from("poll_participants")
+          .select("has_voted")
+          .eq("poll_id", pollId)
+          .eq("user_id", user.id)
           .single();
 
         if (participation?.has_voted) setHasVoted(true);
@@ -86,8 +86,8 @@ export function VoteScreen() {
 
   // Navigate to results when poll closes
   useEffect(() => {
-    if (pollStatus === 'closed') {
-      navigation.replace('Results', { pollId });
+    if (pollStatus === "closed") {
+      navigation.replace("Results", { pollId });
     }
   }, [pollStatus, pollId, navigation]);
 
@@ -97,7 +97,7 @@ export function VoteScreen() {
 
   const handleSubmitVote = async () => {
     if (!user || rankings.length === 0) {
-      Alert.alert('No Rankings', 'Please rank at least one candidate.');
+      Alert.alert("No Rankings", "Please rank at least one candidate.");
       return;
     }
 
@@ -116,26 +116,26 @@ export function VoteScreen() {
       });
 
       const { error: voteError } = await supabase
-        .from('votes')
+        .from("votes")
         .insert(voteRows);
 
       if (voteError) {
-        Alert.alert('Vote Failed', voteError.message);
+        Alert.alert("Vote Failed", voteError.message);
         setSubmitting(false);
         return;
       }
 
       // Mark as voted
       await supabase
-        .from('poll_participants')
+        .from("poll_participants")
         .update({ has_voted: true })
-        .eq('poll_id', pollId)
-        .eq('user_id', user.id);
+        .eq("poll_id", pollId)
+        .eq("user_id", user.id);
 
       setHasVoted(true);
     } catch (err) {
-      console.error('Submit vote error:', err);
-      Alert.alert('Error', 'Something went wrong submitting your vote.');
+      console.error("Submit vote error:", err);
+      Alert.alert("Error", "Something went wrong submitting your vote.");
     }
 
     setSubmitting(false);
@@ -145,13 +145,13 @@ export function VoteScreen() {
     try {
       // Fetch all votes and compute results
       const { data: votes } = await supabase
-        .from('votes')
-        .select('voter_id, candidate_id, rank')
-        .eq('poll_id', pollId)
-        .order('rank');
+        .from("votes")
+        .select("voter_id, candidate_id, rank")
+        .eq("poll_id", pollId)
+        .order("rank");
 
       if (!votes || votes.length === 0) {
-        Alert.alert('No Votes', 'No votes have been submitted yet.');
+        Alert.alert("No Votes", "No votes have been submitted yet.");
         return;
       }
 
@@ -174,7 +174,7 @@ export function VoteScreen() {
       const result = calculateWinner(candidateNames, ballots);
 
       // Store results
-      await supabase.from('poll_results').insert({
+      await supabase.from("poll_results").insert({
         poll_id: pollId,
         winner_name: result.winner,
         rounds_data: result.rounds,
@@ -183,14 +183,14 @@ export function VoteScreen() {
 
       // Update poll status
       await supabase
-        .from('polls')
-        .update({ status: 'closed', closed_at: new Date().toISOString() })
-        .eq('id', pollId);
+        .from("polls")
+        .update({ status: "closed", closed_at: new Date().toISOString() })
+        .eq("id", pollId);
 
-      navigation.replace('Results', { pollId });
+      navigation.replace("Results", { pollId });
     } catch (err) {
-      console.error('Close voting error:', err);
-      Alert.alert('Error', 'Something went wrong closing the poll.');
+      console.error("Close voting error:", err);
+      Alert.alert("Error", "Something went wrong closing the poll.");
     }
   };
 
@@ -240,7 +240,7 @@ export function VoteScreen() {
                   p.has_voted ? styles.votedStatus : styles.pendingStatus,
                 ]}
               >
-                {p.has_voted ? 'Voted' : 'Pending'}
+                {p.has_voted ? "Voted" : "Pending"}
               </Text>
             </View>
           ))}
@@ -251,7 +251,7 @@ export function VoteScreen() {
           <Button
             title={
               votedCount === totalCount
-                ? 'See Results'
+                ? "See Results"
                 : `Close Voting (${votedCount}/${totalCount} voted)`
             }
             onPress={handleCloseVoting}
@@ -264,10 +264,7 @@ export function VoteScreen() {
 
   // Voting UI
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.content}
-    >
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.voterHeader}>
         <Text style={styles.pollTitle}>{pollTitle}</Text>
         <Text style={styles.voterLabel}>
@@ -283,7 +280,7 @@ export function VoteScreen() {
       />
 
       <Button
-        title={submitting ? 'Submitting...' : 'Submit Vote'}
+        title={submitting ? "Submitting..." : "Submit Vote"}
         onPress={handleSubmitVote}
         disabled={rankings.length === 0 || submitting}
         style={styles.submitButton}
@@ -295,8 +292,8 @@ export function VoteScreen() {
 const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: colors.gray[50],
   },
   container: {
@@ -310,15 +307,15 @@ const styles = StyleSheet.create({
   waitingContent: {
     padding: spacing.lg,
     paddingBottom: spacing.xxl,
-    alignItems: 'center',
+    alignItems: "center",
   },
   voterHeader: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: spacing.lg,
   },
   pollTitle: {
     fontSize: fontSizes.xl,
-    fontWeight: '700',
+    fontWeight: "700",
     fontFamily: fonts.heading,
     color: colors.gray[800],
     marginBottom: spacing.xs,
@@ -332,12 +329,12 @@ const styles = StyleSheet.create({
     height: 6,
     backgroundColor: colors.gray[200],
     borderRadius: 3,
-    width: '100%',
+    width: "100%",
     marginVertical: spacing.lg,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   progressBar: {
-    height: '100%',
+    height: "100%",
     backgroundColor: colors.primary,
     borderRadius: 3,
   },
@@ -346,7 +343,7 @@ const styles = StyleSheet.create({
   },
   votedTitle: {
     fontSize: fontSizes.xl,
-    fontWeight: '700',
+    fontWeight: "700",
     fontFamily: fonts.heading,
     color: colors.primary,
     marginTop: spacing.xxl,
@@ -358,14 +355,14 @@ const styles = StyleSheet.create({
     color: colors.gray[500],
   },
   votersList: {
-    width: '100%',
+    width: "100%",
     gap: spacing.sm,
     marginTop: spacing.md,
   },
   voterRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     backgroundColor: colors.white,
     padding: spacing.md,
     borderRadius: 8,
@@ -378,7 +375,7 @@ const styles = StyleSheet.create({
   voterStatus: {
     fontSize: fontSizes.sm,
     fontFamily: fonts.body,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   votedStatus: {
     color: colors.primary,
@@ -388,6 +385,6 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     marginTop: spacing.lg,
-    width: '100%',
+    width: "100%",
   },
 });

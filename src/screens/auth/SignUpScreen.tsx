@@ -1,37 +1,37 @@
-import React, { useState } from 'react';
+import { useNavigation } from "@react-navigation/native";
+import React, { useState } from "react";
 import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
   Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { Button } from '../../components/Button';
-import { useAuth } from '../../providers/AuthProvider';
-import { colors, fontSizes, fonts } from '../../theme';
-import { spacing } from '../../lib/constants';
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import { Button } from "../../components/Button";
+import { spacing } from "../../lib/constants";
+import { useAuth } from "../../providers/AuthProvider";
+import { colors, fontSizes, fonts } from "../../theme";
 
 export function SignUpScreen() {
   const navigation = useNavigation();
   const { signUp } = useAuth();
 
-  const [displayName, setDisplayName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [displayName, setDisplayName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSignUp = async () => {
     if (!displayName.trim() || !email.trim() || !password.trim()) {
-      Alert.alert('Missing Fields', 'Please fill in all fields.');
+      Alert.alert("Missing Fields", "Please fill in all fields.");
       return;
     }
 
     if (password.length < 6) {
-      Alert.alert('Weak Password', 'Password must be at least 6 characters.');
+      Alert.alert("Weak Password", "Password must be at least 6 characters.");
       return;
     }
 
@@ -40,14 +40,14 @@ export function SignUpScreen() {
     setLoading(false);
 
     if (error) {
-      Alert.alert('Sign Up Failed', error.message);
+      Alert.alert("Sign Up Failed", error.message);
     }
   };
 
   return (
     <KeyboardAvoidingView
       style={styles.flex}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <ScrollView
         contentContainerStyle={styles.container}
@@ -96,7 +96,7 @@ export function SignUpScreen() {
           />
 
           <Button
-            title={loading ? 'Creating account...' : 'Sign Up'}
+            title={loading ? "Creating account..." : "Sign Up"}
             onPress={handleSignUp}
             disabled={loading}
             style={styles.button}
@@ -122,15 +122,15 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     backgroundColor: colors.gray[50],
     padding: spacing.lg,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   hero: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: spacing.xxl,
   },
   title: {
     fontSize: fontSizes.xxl,
-    fontWeight: '800',
+    fontWeight: "800",
     fontFamily: fonts.heading,
     color: colors.primary,
     marginBottom: spacing.sm,
@@ -139,14 +139,14 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.md,
     fontFamily: fonts.body,
     color: colors.gray[500],
-    textAlign: 'center',
+    textAlign: "center",
   },
   form: {
     gap: spacing.sm,
   },
   label: {
     fontSize: fontSizes.sm,
-    fontWeight: '600',
+    fontWeight: "600",
     fontFamily: fonts.body,
     color: colors.gray[700],
     marginTop: spacing.sm,

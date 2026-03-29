@@ -1,8 +1,8 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { Feather } from '@expo/vector-icons';
-import { colors, fontSizes, fonts } from '../theme';
-import { spacing } from '../lib/constants';
+import { Feather } from "@expo/vector-icons";
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { spacing } from "../lib/constants";
+import { colors, fontSizes, fonts } from "../theme";
 
 interface DraggableRankingPickerProps {
   candidates: string[];
@@ -44,9 +44,9 @@ export function DraggableRankingPicker({
   };
 
   const getRankLabel = (r: number) => {
-    if (r === 1) return '1st';
-    if (r === 2) return '2nd';
-    if (r === 3) return '3rd';
+    if (r === 1) return "1st";
+    if (r === 2) return "2nd";
+    if (r === 3) return "3rd";
     return `${r}th`;
   };
 
@@ -57,8 +57,8 @@ export function DraggableRankingPicker({
         {rankings.length === 0
           ? `Tap candidates below to rank them (select up to ${maxRankChoices})`
           : rankings.length < maxRankChoices
-            ? `${maxRankChoices - rankings.length} more choice${maxRankChoices - rankings.length > 1 ? 's' : ''} available`
-            : 'Use arrows to reorder, tap X to remove'}
+            ? `${maxRankChoices - rankings.length} more choice${maxRankChoices - rankings.length > 1 ? "s" : ""} available`
+            : "Use arrows to reorder, tap X to remove"}
       </Text>
 
       {/* Current rankings */}
@@ -123,7 +123,7 @@ export function DraggableRankingPicker({
       {unranked.length > 0 && (
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>
-            {rankings.length === 0 ? 'Candidates' : 'Available'}
+            {rankings.length === 0 ? "Candidates" : "Available"}
           </Text>
           {unranked.map((candidate) => (
             <TouchableOpacity
@@ -168,25 +168,25 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.sm,
     fontFamily: fonts.body,
     color: colors.gray[500],
-    textAlign: 'center',
+    textAlign: "center",
   },
   section: {
     gap: spacing.xs,
   },
   sectionLabel: {
     fontSize: fontSizes.sm,
-    fontWeight: '600',
+    fontWeight: "600",
     fontFamily: fonts.heading,
     color: colors.gray[600],
     marginBottom: spacing.xs,
-    textTransform: 'uppercase',
+    textTransform: "uppercase",
     letterSpacing: 1,
   },
   rankItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     height: ITEM_HEIGHT,
-    backgroundColor: colors.primary + '10',
+    backgroundColor: colors.primary + "10",
     borderWidth: 2,
     borderColor: colors.primary,
     borderRadius: 12,
@@ -203,30 +203,30 @@ const styles = StyleSheet.create({
   rankBadgeText: {
     color: colors.white,
     fontSize: fontSizes.sm,
-    fontWeight: '700',
+    fontWeight: "700",
     fontFamily: fonts.body,
   },
   rankItemText: {
     flex: 1,
     fontSize: fontSizes.md,
-    fontWeight: '600',
+    fontWeight: "600",
     fontFamily: fonts.body,
     color: colors.primary,
   },
   arrowButtons: {
-    alignItems: 'center',
+    alignItems: "center",
     marginRight: spacing.xs,
   },
   removeButton: {
     width: 32,
     height: 32,
     borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   availableItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     height: ITEM_HEIGHT,
     backgroundColor: colors.white,
     borderWidth: 2,
@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
   },
   availableText: {
     fontSize: fontSizes.md,
-    fontWeight: '500',
+    fontWeight: "500",
     fontFamily: fonts.body,
     color: colors.gray[800],
   },

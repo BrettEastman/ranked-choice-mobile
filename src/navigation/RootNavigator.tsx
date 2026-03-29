@@ -1,11 +1,11 @@
-import React from 'react';
-import { ActivityIndicator, View, StyleSheet } from 'react-native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { AppTabNavigator } from './AppTabNavigator';
-import { PollStackNavigator } from './PollStackNavigator';
-import { AuthStackNavigator } from './AuthStackNavigator';
-import { useAuth } from '../providers/AuthProvider';
-import { colors } from '../theme';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import React from "react";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { useAuth } from "../providers/AuthProvider";
+import { colors } from "../theme";
+import { AppTabNavigator } from "./AppTabNavigator";
+import { AuthStackNavigator } from "./AuthStackNavigator";
+import { PollStackNavigator } from "./PollStackNavigator";
 
 export type RootStackParamList = {
   Auth: undefined;
@@ -34,7 +34,7 @@ export function RootNavigator() {
           <Stack.Screen
             name="PollFlow"
             component={PollStackNavigator}
-            options={{ presentation: 'modal' }}
+            options={{ presentation: "modal" }}
           />
         </>
       ) : (
@@ -47,8 +47,8 @@ export function RootNavigator() {
 const styles = StyleSheet.create({
   loading: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: colors.gray[50],
   },
 });
