@@ -97,11 +97,11 @@ const styles = StyleSheet.create({
   displayName: {
     fontSize: fontSizes.lg,
     fontWeight: '700',
-    fontFamily: fonts.heading,
+    fontFamily: fonts.header,
     color: colors.gray[800],
   },
   email: {
-    fontSize: fontSizes.sm,
+    fontSize: fontSizes.sm - 2,
     fontFamily: fonts.body,
     color: colors.gray[500],
     marginTop: 2,

@@ -14,6 +14,8 @@ export const fontFamily = {
   cutiveMono: "CutiveMono_400Regular",
   body: "CutiveMono_400Regular",
   heading: "CutiveMono_400Regular",
+  // System sans-serif for navigation headers (renders as SF Pro on iOS, Roboto on Android)
+  header: "System",
   mono: "Courier New",
 } as const;
 

@@ -22,7 +22,8 @@ export function AppTabNavigator() {
         tabBarInactiveTintColor: colors.gray[400],
         headerStyle: { backgroundColor: colors.primary },
         headerTintColor: colors.white,
-        headerTitleStyle: { fontWeight: '700', fontFamily: fonts.heading },
+        headerTitleStyle: { fontWeight: '700', fontFamily: fonts.header },
+        headerTitleAlign: 'left',
         tabBarLabelStyle: { fontFamily: fonts.body },
       }}
     >
