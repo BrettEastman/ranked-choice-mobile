@@ -13,7 +13,8 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Button } from '../../components/Button';
 import { useAuth } from '../../providers/AuthProvider';
-import { colors, spacing, fontSizes, fonts } from '../../lib/constants';
+import { colors, fontSizes, fonts } from '../../theme';
+import { spacing } from '../../lib/constants';
 import { AuthStackParamList } from '../../navigation/AuthStackNavigator';
 
 type LoginNavProp = NativeStackNavigationProp<AuthStackParamList, 'Login'>;

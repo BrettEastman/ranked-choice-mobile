@@ -12,7 +12,8 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { Button } from '../../components/Button';
 import { useAuth } from '../../providers/AuthProvider';
-import { colors, spacing, fontSizes, fonts } from '../../lib/constants';
+import { colors, fontSizes, fonts } from '../../theme';
+import { spacing } from '../../lib/constants';
 
 export function SignUpScreen() {
   const navigation = useNavigation();

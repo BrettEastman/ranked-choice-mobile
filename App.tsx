@@ -7,7 +7,7 @@ import { StyleSheet, ActivityIndicator, View } from 'react-native';
 import { useFonts, CutiveMono_400Regular } from '@expo-google-fonts/cutive-mono';
 import { AuthProvider } from './src/providers/AuthProvider';
 import { RootNavigator } from './src/navigation/RootNavigator';
-import { colors } from './src/lib/constants';
+import { colors } from './src/theme';
 
 const queryClient = new QueryClient({
   defaultOptions: {

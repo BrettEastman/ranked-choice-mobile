@@ -13,7 +13,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Feather } from '@expo/vector-icons';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../providers/AuthProvider';
-import { colors, spacing, fontSizes, fonts } from '../../lib/constants';
+import { colors, fontSizes, fonts } from '../../theme';
+import { spacing } from '../../lib/constants';
 import { RootStackParamList } from '../../navigation/RootNavigator';
 
 type HistoryNavProp = NativeStackNavigationProp<RootStackParamList>;

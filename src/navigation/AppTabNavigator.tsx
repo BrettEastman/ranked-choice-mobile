@@ -4,7 +4,7 @@ import { Feather } from '@expo/vector-icons';
 import { HomeScreen } from '../screens/home/HomeScreen';
 import { HistoryScreen } from '../screens/history/HistoryScreen';
 import { SettingsScreen } from '../screens/settings/SettingsScreen';
-import { colors, fonts } from '../lib/constants';
+import { colors, fonts } from '../theme';
 
 export type AppTabParamList = {
   Home: undefined;

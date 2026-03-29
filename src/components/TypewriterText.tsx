@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Text, TextStyle } from 'react-native';
-import { fonts } from '../lib/constants';
+import { fonts } from '../theme';
 
 interface TypewriterTextProps {
   text: string;

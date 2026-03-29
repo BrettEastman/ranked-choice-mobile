@@ -13,7 +13,8 @@ import { Button } from '../../components/Button';
 import { supabase } from '../../lib/supabase';
 import { normalizeShareCode } from '../../lib/shareCode';
 import { useAuth } from '../../providers/AuthProvider';
-import { colors, spacing, fontSizes, fonts } from '../../lib/constants';
+import { colors, fontSizes, fonts } from '../../theme';
+import { spacing } from '../../lib/constants';
 import { RootStackParamList } from '../../navigation/RootNavigator';
 
 type HomeNavProp = NativeStackNavigationProp<RootStackParamList, 'AppTabs'>;

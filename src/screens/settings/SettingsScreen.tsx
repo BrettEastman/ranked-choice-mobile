@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, Alert } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { Button } from '../../components/Button';
 import { useAuth } from '../../providers/AuthProvider';
-import { colors, spacing, fontSizes, fonts } from '../../lib/constants';
+import { colors, fontSizes, fonts } from '../../theme';
+import { spacing } from '../../lib/constants';
 
 export function SettingsScreen() {
   const { user, signOut } = useAuth();

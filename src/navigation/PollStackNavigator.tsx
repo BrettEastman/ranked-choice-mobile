@@ -4,7 +4,7 @@ import { CreatePollScreen } from '../screens/poll/CreatePollScreen';
 import { PollLobbyScreen } from '../screens/poll/PollLobbyScreen';
 import { VoteScreen } from '../screens/poll/VoteScreen';
 import { ResultsScreen } from '../screens/poll/ResultsScreen';
-import { colors, fonts } from '../lib/constants';
+import { colors, fonts } from '../theme';
 
 export type PollStackParamList = {
   CreatePoll: undefined;

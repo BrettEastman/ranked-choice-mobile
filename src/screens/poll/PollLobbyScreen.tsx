@@ -15,7 +15,8 @@ import { Button } from '../../components/Button';
 import { useRealtimePoll } from '../../hooks/useRealtimePoll';
 import { useAuth } from '../../providers/AuthProvider';
 import { supabase } from '../../lib/supabase';
-import { colors, spacing, fontSizes, fonts } from '../../lib/constants';
+import { colors, fontSizes, fonts } from '../../theme';
+import { spacing } from '../../lib/constants';
 import { PollStackParamList } from '../../navigation/PollStackNavigator';
 
 type LobbyNavProp = NativeStackNavigationProp<PollStackParamList, 'PollLobby'>;

@@ -2,7 +2,7 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { LoginScreen } from '../screens/auth/LoginScreen';
 import { SignUpScreen } from '../screens/auth/SignUpScreen';
-import { colors, fonts } from '../lib/constants';
+import { colors, fonts } from '../theme';
 
 export type AuthStackParamList = {
   Login: undefined;

@@ -5,7 +5,7 @@ import { AppTabNavigator } from './AppTabNavigator';
 import { PollStackNavigator } from './PollStackNavigator';
 import { AuthStackNavigator } from './AuthStackNavigator';
 import { useAuth } from '../providers/AuthProvider';
-import { colors } from '../lib/constants';
+import { colors } from '../theme';
 
 export type RootStackParamList = {
   Auth: undefined;

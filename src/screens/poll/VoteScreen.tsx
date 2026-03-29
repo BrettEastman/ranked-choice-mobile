@@ -15,7 +15,8 @@ import { useAuth } from '../../providers/AuthProvider';
 import { useRealtimePoll } from '../../hooks/useRealtimePoll';
 import { supabase } from '../../lib/supabase';
 import { calculateWinner } from '../../lib/calculateWinner';
-import { colors, spacing, fontSizes, fonts } from '../../lib/constants';
+import { colors, fontSizes, fonts } from '../../theme';
+import { spacing } from '../../lib/constants';
 import { PollStackParamList } from '../../navigation/PollStackNavigator';
 
 type VoteNavProp = NativeStackNavigationProp<PollStackParamList, 'Vote'>;

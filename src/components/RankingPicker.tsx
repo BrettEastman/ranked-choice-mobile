@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { colors, spacing, fontSizes, fonts } from '../lib/constants';
+import { colors, fontSizes, fonts } from '../theme';
+import { spacing } from '../lib/constants';
 
 interface RankingPickerProps {
   candidates: string[];

@@ -15,7 +15,8 @@ import { CandidateInput } from '../../components/CandidateInput';
 import { CounterControl } from '../../components/CounterControl';
 import { Button } from '../../components/Button';
 import { usePollStore } from '../../stores/pollStore';
-import { colors, spacing, fontSizes, fonts, limits } from '../../lib/constants';
+import { colors, fontSizes, fonts } from '../../theme';
+import { spacing, limits } from '../../lib/constants';
 import { PollStackParamList } from '../../navigation/PollStackNavigator';
 
 type CreatePollNavProp = NativeStackNavigationProp<
