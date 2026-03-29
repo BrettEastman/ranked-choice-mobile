@@ -40,12 +40,6 @@ export function SignUpScreen() {
 
     if (error) {
       Alert.alert('Sign Up Failed', error.message);
-    } else {
-      Alert.alert(
-        'Check Your Email',
-        'We sent you a confirmation link. Please verify your email to sign in.',
-        [{ text: 'OK', onPress: () => navigation.goBack() }]
-      );
     }
   };
 

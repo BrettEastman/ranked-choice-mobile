@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { AppState } from 'react-native';
 import { Session, User } from '@supabase/supabase-js';
+import * as Linking from 'expo-linking';
 import { supabase } from '../lib/supabase';
 
 interface AuthContextType {
@@ -53,7 +55,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setSession(session);
     });
 
-    return () => subscription.unsubscribe();
+    // Handle deep link for email confirmation
+    const handleDeepLink = async (event: { url: string }) => {
+      const url = event.url;
+      if (url.includes('access_token') || url.includes('refresh_token')) {
+        // Extract the fragment (everything after #)
+        const fragment = url.split('#')[1];
+        if (fragment) {
+          const params = new URLSearchParams(fragment);
+          const accessToken = params.get('access_token');
+          const refreshToken = params.get('refresh_token');
+          if (accessToken && refreshToken) {
+            await supabase.auth.setSession({
+              access_token: accessToken,
+              refresh_token: refreshToken,
+            });
+          }
+        }
+      }
+    };
+
+    // Listen for incoming deep links
+    const linkingSub = Linking.addEventListener('url', handleDeepLink);
+
+    // Check if the app was opened via a deep link
+    Linking.getInitialURL().then((url) => {
+      if (url) handleDeepLink({ url });
+    });
+
+    return () => {
+      subscription.unsubscribe();
+      linkingSub.remove();
+    };
   }, []);
 
   const signUp = async (
@@ -61,11 +94,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     password: string,
     displayName: string
   ) => {
+    const redirectUrl = Linking.createURL('auth-callback');
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: { display_name: displayName },
+        emailRedirectTo: redirectUrl,
       },
     });
     return { error: error as Error | null };

@@ -2,6 +2,7 @@
   "expo": {
     "name": "ranked-choice-mobile",
     "slug": "ranked-choice-mobile",
+    "scheme": "rankedchoice",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
