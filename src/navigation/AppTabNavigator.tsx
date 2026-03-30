@@ -1,10 +1,10 @@
-import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Feather } from '@expo/vector-icons';
-import { HomeScreen } from '../screens/home/HomeScreen';
-import { HistoryScreen } from '../screens/history/HistoryScreen';
-import { SettingsScreen } from '../screens/settings/SettingsScreen';
-import { colors, fonts } from '../lib/constants';
+import { Feather } from "@expo/vector-icons";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import React from "react";
+import { HistoryScreen } from "../screens/history/HistoryScreen";
+import { HomeScreen } from "../screens/home/HomeScreen";
+import { SettingsScreen } from "../screens/settings/SettingsScreen";
+import { colors, fonts } from "../theme";
 
 export type AppTabParamList = {
   Home: undefined;
@@ -22,7 +22,8 @@ export function AppTabNavigator() {
         tabBarInactiveTintColor: colors.gray[400],
         headerStyle: { backgroundColor: colors.primary },
         headerTintColor: colors.white,
-        headerTitleStyle: { fontWeight: '700', fontFamily: fonts.heading },
+        headerTitleStyle: { fontWeight: "700", fontFamily: fonts.header },
+        headerTitleAlign: "left",
         tabBarLabelStyle: { fontFamily: fonts.body },
       }}
     >
@@ -30,8 +31,8 @@ export function AppTabNavigator() {
         name="Home"
         component={HomeScreen}
         options={{
-          title: 'Ranked Choice',
-          tabBarLabel: 'Home',
+          title: "Home",
+          tabBarLabel: "Home",
           tabBarIcon: ({ color, size }) => (
             <Feather name="home" size={size} color={color} />
           ),
@@ -41,7 +42,7 @@ export function AppTabNavigator() {
         name="History"
         component={HistoryScreen}
         options={{
-          title: 'History',
+          title: "History",
           tabBarIcon: ({ color, size }) => (
             <Feather name="clock" size={size} color={color} />
           ),
@@ -51,7 +52,7 @@ export function AppTabNavigator() {
         name="Settings"
         component={SettingsScreen}
         options={{
-          title: 'Settings',
+          title: "Settings",
           tabBarIcon: ({ color, size }) => (
             <Feather name="settings" size={size} color={color} />
           ),

@@ -1,12 +1,12 @@
-import { create } from 'zustand';
-import { LocalPoll, LocalVoter, PollResult } from '../types';
+import { create } from "zustand";
 import {
   calculateWinner,
   candidateNamesFromArray,
-} from '../lib/calculateWinner';
-import { supabase } from '../lib/supabase';
-import { generateShareCode } from '../lib/shareCode';
-import { limits } from '../lib/constants';
+} from "../lib/calculateWinner";
+import { limits } from "../lib/constants";
+import { generateShareCode } from "../lib/shareCode";
+import { supabase } from "../lib/supabase";
+import { LocalPoll, LocalVoter, PollResult } from "../types";
 
 interface PollState {
   // Current poll being created/voted on
@@ -49,11 +49,11 @@ export const usePollStore = create<PollState>((set, get) => ({
   supabasePollId: null,
   shareCode: null,
 
-  draftTitle: '',
-  draftDescription: '',
-  draftCandidates: ['', '', ''],
+  draftTitle: "",
+  draftDescription: "",
+  draftCandidates: ["", "", ""],
   draftMaxRankChoices: limits.defaultMaxRankChoices,
-  draftVoterNames: ['', '', ''],
+  draftVoterNames: ["", "", ""],
 
   setDraftTitle: (title) => set({ draftTitle: title }),
   setDraftDescription: (description) => set({ draftDescription: description }),
@@ -71,7 +71,7 @@ export const usePollStore = create<PollState>((set, get) => ({
   updateDraftCandidate: (index, name) =>
     set((state) => ({
       draftCandidates: state.draftCandidates.map((c, i) =>
-        i === index ? name : c
+        i === index ? name : c,
       ),
     })),
 
@@ -90,22 +90,19 @@ export const usePollStore = create<PollState>((set, get) => ({
   updateDraftVoter: (index, name) =>
     set((state) => ({
       draftVoterNames: state.draftVoterNames.map((v, i) =>
-        i === index ? name : v
+        i === index ? name : v,
       ),
     })),
 
   createPoll: async () => {
     const state = get();
-    const candidates = state.draftCandidates.filter((c) => c.trim() !== '');
+    const candidates = state.draftCandidates.filter((c) => c.trim() !== "");
 
     if (candidates.length < limits.minCandidates) return;
 
-    const maxRank = Math.min(
-      state.draftMaxRankChoices,
-      candidates.length - 1
-    );
+    const maxRank = Math.min(state.draftMaxRankChoices, candidates.length - 1);
 
-    const title = state.draftTitle || 'Untitled Poll';
+    const title = state.draftTitle || "Untitled Poll";
     const description = state.draftDescription.trim() || null;
 
     // Persist to Supabase
@@ -121,20 +118,20 @@ export const usePollStore = create<PollState>((set, get) => ({
         shareCode = generateShareCode();
 
         const { data: poll, error: pollError } = await supabase
-          .from('polls')
+          .from("polls")
           .insert({
             creator_id: user.id,
             title,
             description,
             share_code: shareCode,
-            status: 'setup',
+            status: "setup",
             max_rank_choices: maxRank,
           })
           .select()
           .single();
 
         if (pollError) {
-          console.error('Error creating poll in Supabase:', pollError);
+          console.error("Error creating poll in Supabase:", pollError);
         } else if (poll) {
           supabasePollId = poll.id;
 
@@ -146,28 +143,28 @@ export const usePollStore = create<PollState>((set, get) => ({
           }));
 
           const { error: candError } = await supabase
-            .from('candidates')
+            .from("candidates")
             .insert(candidateRows);
 
           if (candError) {
-            console.error('Error inserting candidates:', candError);
+            console.error("Error inserting candidates:", candError);
           }
 
           // Creator joins as participant
           const { error: partError } = await supabase
-            .from('poll_participants')
+            .from("poll_participants")
             .insert({
               poll_id: poll.id,
               user_id: user.id,
             });
 
           if (partError) {
-            console.error('Error joining poll:', partError);
+            console.error("Error joining poll:", partError);
           }
         }
       }
     } catch (err) {
-      console.error('Supabase poll creation failed:', err);
+      console.error("Supabase poll creation failed:", err);
     }
 
     // Set local state
@@ -177,7 +174,7 @@ export const usePollStore = create<PollState>((set, get) => ({
       candidates,
       maxRankChoices: maxRank,
       ballots: [],
-      status: 'setup',
+      status: "setup",
     };
 
     set({
@@ -199,7 +196,7 @@ export const usePollStore = create<PollState>((set, get) => ({
         ballots: [...state.currentPoll.ballots, rankedCandidates],
       },
       voters: state.voters.map((v, i) =>
-        i === state.currentVoterIndex ? { ...v, hasVoted: true } : v
+        i === state.currentVoterIndex ? { ...v, hasVoted: true } : v,
       ),
     });
   },
@@ -217,17 +214,17 @@ export const usePollStore = create<PollState>((set, get) => ({
     if (!state.currentPoll) return;
 
     const candidateNames = candidateNamesFromArray(
-      state.currentPoll.candidates
+      state.currentPoll.candidates,
     );
     const result: PollResult = calculateWinner(
       candidateNames,
-      state.currentPoll.ballots
+      state.currentPoll.ballots,
     );
 
     set({
       currentPoll: {
         ...state.currentPoll,
-        status: 'closed',
+        status: "closed",
         result,
       },
     });
@@ -238,19 +235,19 @@ export const usePollStore = create<PollState>((set, get) => ({
         try {
           // Update poll status
           await supabase
-            .from('polls')
-            .update({ status: 'closed', closed_at: new Date().toISOString() })
-            .eq('id', state.supabasePollId);
+            .from("polls")
+            .update({ status: "closed", closed_at: new Date().toISOString() })
+            .eq("id", state.supabasePollId);
 
           // Store computed results
-          await supabase.from('poll_results').insert({
+          await supabase.from("poll_results").insert({
             poll_id: state.supabasePollId,
             winner_name: result.winner,
             rounds_data: result.rounds,
             total_votes: result.totalVotes,
           });
         } catch (err) {
-          console.error('Error saving results to Supabase:', err);
+          console.error("Error saving results to Supabase:", err);
         }
       })();
     }
@@ -263,10 +260,10 @@ export const usePollStore = create<PollState>((set, get) => ({
       currentVoterIndex: 0,
       supabasePollId: null,
       shareCode: null,
-      draftTitle: '',
-      draftDescription: '',
-      draftCandidates: ['', '', ''],
+      draftTitle: "",
+      draftDescription: "",
+      draftCandidates: ["", "", ""],
       draftMaxRankChoices: limits.defaultMaxRankChoices,
-      draftVoterNames: ['', '', ''],
+      draftVoterNames: ["", "", ""],
     }),
 }));

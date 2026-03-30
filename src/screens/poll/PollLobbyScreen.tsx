@@ -1,25 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  Alert,
-  Share,
-} from 'react-native';
-import * as Clipboard from 'expo-clipboard';
-import { Feather } from '@expo/vector-icons';
-import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Button } from '../../components/Button';
-import { useRealtimePoll } from '../../hooks/useRealtimePoll';
-import { useAuth } from '../../providers/AuthProvider';
-import { supabase } from '../../lib/supabase';
-import { colors, spacing, fontSizes, fonts } from '../../lib/constants';
-import { PollStackParamList } from '../../navigation/PollStackNavigator';
+import { Feather } from "@expo/vector-icons";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import * as Clipboard from "expo-clipboard";
+import React, { useEffect, useState } from "react";
+import { Alert, ScrollView, Share, StyleSheet, Text, View } from "react-native";
+import { Button } from "../../components/Button";
+import { useRealtimePoll } from "../../hooks/useRealtimePoll";
+import { spacing } from "../../lib/constants";
+import { supabase } from "../../lib/supabase";
+import { PollStackParamList } from "../../navigation/PollStackNavigator";
+import { useAuth } from "../../providers/AuthProvider";
+import { colors, fontSizes, fonts } from "../../theme";
 
-type LobbyNavProp = NativeStackNavigationProp<PollStackParamList, 'PollLobby'>;
-type LobbyRouteProp = RouteProp<PollStackParamList, 'PollLobby'>;
+type LobbyNavProp = NativeStackNavigationProp<PollStackParamList, "PollLobby">;
+type LobbyRouteProp = RouteProp<PollStackParamList, "PollLobby">;
 
 export function PollLobbyScreen() {
   const navigation = useNavigation<LobbyNavProp>();
@@ -28,16 +22,16 @@ export function PollLobbyScreen() {
   const { pollId, shareCode, isCreator } = route.params;
 
   const { participants, pollStatus, loading } = useRealtimePoll(pollId);
-  const [pollTitle, setPollTitle] = useState('');
+  const [pollTitle, setPollTitle] = useState("");
   const [copied, setCopied] = useState(false);
 
   // Fetch poll title
   useEffect(() => {
     (async () => {
       const { data } = await supabase
-        .from('polls')
-        .select('title')
-        .eq('id', pollId)
+        .from("polls")
+        .select("title")
+        .eq("id", pollId)
         .single();
       if (data) setPollTitle(data.title);
     })();
@@ -45,15 +39,15 @@ export function PollLobbyScreen() {
 
   // Navigate when poll status changes to 'voting'
   useEffect(() => {
-    if (pollStatus === 'voting' && !isCreator) {
-      navigation.replace('Vote', { pollId });
+    if (pollStatus === "voting" && !isCreator) {
+      navigation.replace("Vote", { pollId });
     }
   }, [pollStatus, isCreator, pollId, navigation]);
 
   // Navigate when poll status changes to 'closed'
   useEffect(() => {
-    if (pollStatus === 'closed') {
-      navigation.replace('Results', { pollId });
+    if (pollStatus === "closed") {
+      navigation.replace("Results", { pollId });
     }
   }, [pollStatus, pollId, navigation]);
 
@@ -69,43 +63,40 @@ export function PollLobbyScreen() {
         message: `Join my ranked-choice poll! Use code: ${shareCode}`,
       });
     } catch (err) {
-      console.error('Share error:', err);
+      console.error("Share error:", err);
     }
   };
 
   const handleStartVoting = async () => {
     if (participants.length < 2) {
       Alert.alert(
-        'Need More Voters',
-        'At least 2 participants are needed to start voting.'
+        "Need More Voters",
+        "At least 2 participants are needed to start voting.",
       );
       return;
     }
 
     const { error } = await supabase
-      .from('polls')
-      .update({ status: 'voting' })
-      .eq('id', pollId);
+      .from("polls")
+      .update({ status: "voting" })
+      .eq("id", pollId);
 
     if (error) {
-      Alert.alert('Error', 'Failed to start voting. Please try again.');
-      console.error('Error starting voting:', error);
+      Alert.alert("Error", "Failed to start voting. Please try again.");
+      console.error("Error starting voting:", error);
       return;
     }
 
-    navigation.replace('Vote', { pollId });
+    navigation.replace("Vote", { pollId });
   };
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.content}
-    >
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       {/* Poll info */}
       <View style={styles.header}>
-        <Text style={styles.title}>{pollTitle || 'Loading...'}</Text>
+        <Text style={styles.title}>{pollTitle || "Loading..."}</Text>
         <Text style={styles.statusBadge}>
-          {pollStatus === 'setup' ? 'Waiting for voters' : pollStatus}
+          {pollStatus === "setup" ? "Waiting for voters" : pollStatus}
         </Text>
       </View>
 
@@ -115,7 +106,7 @@ export function PollLobbyScreen() {
         <View style={styles.codeRow}>
           <Text style={styles.codeText}>{shareCode}</Text>
           <Button
-            title={copied ? 'Copied!' : 'Copy'}
+            title={copied ? "Copied!" : "Copy"}
             variant="outline"
             onPress={handleCopyCode}
             style={styles.copyButton}
@@ -163,7 +154,7 @@ export function PollLobbyScreen() {
       </View>
 
       {/* Creator action */}
-      {isCreator && pollStatus === 'setup' && (
+      {isCreator && pollStatus === "setup" && (
         <Button
           title="Start Voting"
           onPress={handleStartVoting}
@@ -172,7 +163,7 @@ export function PollLobbyScreen() {
       )}
 
       {/* Non-creator waiting message */}
-      {!isCreator && pollStatus === 'setup' && (
+      {!isCreator && pollStatus === "setup" && (
         <View style={styles.waitingSection}>
           <Feather name="clock" size={24} color={colors.gray[400]} />
           <Text style={styles.waitingText}>
@@ -194,33 +185,33 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.xxl,
   },
   header: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: spacing.lg,
   },
   title: {
     fontSize: fontSizes.xl,
-    fontWeight: '700',
+    fontWeight: "700",
     fontFamily: fonts.heading,
     color: colors.gray[800],
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: spacing.sm,
   },
   statusBadge: {
     fontSize: fontSizes.sm,
     fontFamily: fonts.body,
     color: colors.primary,
-    backgroundColor: colors.primary + '15',
+    backgroundColor: colors.primary + "15",
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.xs,
     borderRadius: 12,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   shareSection: {
     backgroundColor: colors.white,
     borderRadius: 12,
     padding: spacing.lg,
     marginBottom: spacing.lg,
-    alignItems: 'center',
+    alignItems: "center",
   },
   shareLabel: {
     fontSize: fontSizes.sm,
@@ -229,14 +220,14 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   codeRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: spacing.md,
     marginBottom: spacing.md,
   },
   codeText: {
     fontSize: fontSizes.title,
-    fontWeight: '800',
+    fontWeight: "800",
     fontFamily: fonts.mono,
     color: colors.primary,
     letterSpacing: 4,
@@ -246,14 +237,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
   },
   shareButton: {
-    width: '100%',
+    width: "100%",
   },
   participantsSection: {
     marginBottom: spacing.lg,
   },
   sectionTitle: {
     fontSize: fontSizes.lg,
-    fontWeight: '700',
+    fontWeight: "700",
     fontFamily: fonts.heading,
     color: colors.gray[800],
     marginBottom: spacing.md,
@@ -264,8 +255,8 @@ const styles = StyleSheet.create({
     color: colors.gray[400],
   },
   participantRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: colors.white,
     borderRadius: 8,
     padding: spacing.md,
@@ -284,7 +275,7 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.sm,
     fontFamily: fonts.body,
     color: colors.primary,
-    fontWeight: '600',
+    fontWeight: "600",
     marginRight: spacing.sm,
   },
   votedIcon: {
@@ -294,7 +285,7 @@ const styles = StyleSheet.create({
     marginTop: spacing.md,
   },
   waitingSection: {
-    alignItems: 'center',
+    alignItems: "center",
     padding: spacing.lg,
     gap: spacing.sm,
   },
@@ -302,6 +293,6 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.md,
     fontFamily: fonts.body,
     color: colors.gray[500],
-    textAlign: 'center',
+    textAlign: "center",
   },
 });

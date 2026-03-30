@@ -1,34 +1,35 @@
-import React, { useState } from 'react';
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import React, { useState } from "react";
 import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
   Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Button } from '../../components/Button';
-import { useAuth } from '../../providers/AuthProvider';
-import { colors, spacing, fontSizes, fonts } from '../../lib/constants';
-import { AuthStackParamList } from '../../navigation/AuthStackNavigator';
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import { Button } from "../../components/Button";
+import { spacing } from "../../lib/constants";
+import { AuthStackParamList } from "../../navigation/AuthStackNavigator";
+import { useAuth } from "../../providers/AuthProvider";
+import { colors, fontSizes, fonts } from "../../theme";
 
-type LoginNavProp = NativeStackNavigationProp<AuthStackParamList, 'Login'>;
+type LoginNavProp = NativeStackNavigationProp<AuthStackParamList, "Login">;
 
 export function LoginScreen() {
   const navigation = useNavigation<LoginNavProp>();
   const { signIn } = useAuth();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
     if (!email.trim() || !password.trim()) {
-      Alert.alert('Missing Fields', 'Please enter your email and password.');
+      Alert.alert("Missing Fields", "Please enter your email and password.");
       return;
     }
 
@@ -37,14 +38,14 @@ export function LoginScreen() {
     setLoading(false);
 
     if (error) {
-      Alert.alert('Login Failed', error.message);
+      Alert.alert("Login Failed", error.message);
     }
   };
 
   return (
     <KeyboardAvoidingView
       style={styles.flex}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <ScrollView
         contentContainerStyle={styles.container}
@@ -80,7 +81,7 @@ export function LoginScreen() {
           />
 
           <Button
-            title={loading ? 'Signing in...' : 'Sign In'}
+            title={loading ? "Signing in..." : "Sign In"}
             onPress={handleLogin}
             disabled={loading}
             style={styles.button}
@@ -89,7 +90,7 @@ export function LoginScreen() {
           <Button
             title="Create an Account"
             variant="outline"
-            onPress={() => navigation.navigate('SignUp')}
+            onPress={() => navigation.navigate("SignUp")}
             style={styles.button}
           />
         </View>
@@ -106,15 +107,15 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     backgroundColor: colors.gray[50],
     padding: spacing.lg,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   hero: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: spacing.xxl,
   },
   title: {
     fontSize: fontSizes.title,
-    fontWeight: '800',
+    fontWeight: "800",
     fontFamily: fonts.heading,
     color: colors.primary,
     marginBottom: spacing.sm,
@@ -123,14 +124,14 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.md,
     fontFamily: fonts.body,
     color: colors.gray[500],
-    textAlign: 'center',
+    textAlign: "center",
   },
   form: {
     gap: spacing.sm,
   },
   label: {
     fontSize: fontSizes.sm,
-    fontWeight: '600',
+    fontWeight: "600",
     fontFamily: fonts.body,
     color: colors.gray[700],
     marginTop: spacing.sm,

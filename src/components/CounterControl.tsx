@@ -1,6 +1,7 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { colors, spacing, fontSizes, fonts } from '../lib/constants';
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { spacing } from "../lib/constants";
+import { colors, fontSizes, fonts } from "../theme";
 
 interface CounterControlProps {
   label: string;
@@ -28,7 +29,9 @@ export function CounterControl({
           onPress={onDecrement}
           disabled={value <= min}
         >
-          <Text style={[styles.buttonText, value <= min && styles.textDisabled]}>
+          <Text
+            style={[styles.buttonText, value <= min && styles.textDisabled]}
+          >
             −
           </Text>
         </TouchableOpacity>
@@ -38,7 +41,9 @@ export function CounterControl({
           onPress={onIncrement}
           disabled={value >= max}
         >
-          <Text style={[styles.buttonText, value >= max && styles.textDisabled]}>
+          <Text
+            style={[styles.buttonText, value >= max && styles.textDisabled]}
+          >
             +
           </Text>
         </TouchableOpacity>
@@ -49,20 +54,20 @@ export function CounterControl({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingVertical: spacing.sm,
   },
   label: {
     fontSize: fontSizes.md,
-    fontWeight: '500',
+    fontWeight: "500",
     fontFamily: fonts.body,
     color: colors.gray[800],
   },
   controls: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: spacing.md,
   },
   button: {
@@ -70,8 +75,8 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     backgroundColor: colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   buttonDisabled: {
     backgroundColor: colors.gray[200],
@@ -79,7 +84,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: fontSizes.xl,
     color: colors.white,
-    fontWeight: '700',
+    fontWeight: "700",
     lineHeight: 26,
   },
   textDisabled: {
@@ -87,10 +92,10 @@ const styles = StyleSheet.create({
   },
   value: {
     fontSize: fontSizes.xl,
-    fontWeight: '700',
+    fontWeight: "700",
     fontFamily: fonts.body,
     color: colors.gray[800],
     minWidth: 30,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });

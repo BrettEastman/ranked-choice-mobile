@@ -1,12 +1,13 @@
-import React from 'react';
+import React from "react";
 import {
-  View,
+  StyleSheet,
+  Text,
   TextInput,
   TouchableOpacity,
-  Text,
-  StyleSheet,
-} from 'react-native';
-import { colors, spacing, fontSizes, fonts } from '../lib/constants';
+  View,
+} from "react-native";
+import { spacing } from "../lib/constants";
+import { colors, fontSizes, fonts } from "../theme";
 
 interface CandidateInputProps {
   value: string;
@@ -46,13 +47,13 @@ export function CandidateInput({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: spacing.sm,
   },
   index: {
     fontSize: fontSizes.md,
-    fontWeight: '600',
+    fontWeight: "600",
     color: colors.gray[500],
     width: 28,
   },
@@ -74,12 +75,12 @@ const styles = StyleSheet.create({
     height: 32,
     borderRadius: 16,
     backgroundColor: colors.secondary,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   removeText: {
     color: colors.white,
     fontSize: fontSizes.sm,
-    fontWeight: '700',
+    fontWeight: "700",
   },
 });

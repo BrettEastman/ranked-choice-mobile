@@ -1,7 +1,7 @@
-import { useCallback } from 'react';
-import { supabase } from '../lib/supabase';
-import { generateShareCode } from '../lib/shareCode';
-import { useAuth } from '../providers/AuthProvider';
+import { useCallback } from "react";
+import { generateShareCode } from "../lib/shareCode";
+import { supabase } from "../lib/supabase";
+import { useAuth } from "../providers/AuthProvider";
 
 interface CreatePollParams {
   title: string;
@@ -34,16 +34,16 @@ export function usePoll() {
 
   const createPoll = useCallback(
     async (params: CreatePollParams) => {
-      if (!user) throw new Error('Must be signed in to create a poll');
+      if (!user) throw new Error("Must be signed in to create a poll");
 
       // Generate a unique share code (retry on collision)
       let shareCode = generateShareCode();
       let attempts = 0;
       while (attempts < 5) {
         const { data: existing } = await supabase
-          .from('polls')
-          .select('id')
-          .eq('share_code', shareCode)
+          .from("polls")
+          .select("id")
+          .eq("share_code", shareCode)
           .single();
 
         if (!existing) break;
@@ -53,13 +53,13 @@ export function usePoll() {
 
       // Insert the poll
       const { data: poll, error: pollError } = await supabase
-        .from('polls')
+        .from("polls")
         .insert({
           creator_id: user.id,
           title: params.title,
           description: params.description ?? null,
           share_code: shareCode,
-          status: 'setup',
+          status: "setup",
           max_rank_choices: params.maxRankChoices,
         })
         .select()
@@ -75,14 +75,14 @@ export function usePoll() {
       }));
 
       const { error: candidatesError } = await supabase
-        .from('candidates')
+        .from("candidates")
         .insert(candidateRows);
 
       if (candidatesError) throw candidatesError;
 
       // Creator auto-joins as participant
       const { error: participantError } = await supabase
-        .from('poll_participants')
+        .from("poll_participants")
         .insert({
           poll_id: (poll as PollRow).id,
           user_id: user.id,
@@ -92,23 +92,23 @@ export function usePoll() {
 
       return poll as PollRow;
     },
-    [user]
+    [user],
   );
 
   const fetchPoll = useCallback(async (pollId: string) => {
     const { data: poll, error: pollError } = await supabase
-      .from('polls')
-      .select('*')
-      .eq('id', pollId)
+      .from("polls")
+      .select("*")
+      .eq("id", pollId)
       .single();
 
     if (pollError) throw pollError;
 
     const { data: candidates, error: candidatesError } = await supabase
-      .from('candidates')
-      .select('*')
-      .eq('poll_id', pollId)
-      .order('position');
+      .from("candidates")
+      .select("*")
+      .eq("poll_id", pollId)
+      .order("position");
 
     if (candidatesError) throw candidatesError;
 
@@ -122,37 +122,37 @@ export function usePoll() {
     if (!user) return [];
 
     const { data, error } = await supabase
-      .from('polls')
-      .select('*')
-      .eq('creator_id', user.id)
-      .order('created_at', { ascending: false });
+      .from("polls")
+      .select("*")
+      .eq("creator_id", user.id)
+      .order("created_at", { ascending: false });
 
     if (error) throw error;
     return data as PollRow[];
   }, [user]);
 
   const updatePollStatus = useCallback(
-    async (pollId: string, status: 'setup' | 'voting' | 'closed') => {
+    async (pollId: string, status: "setup" | "voting" | "closed") => {
       const update: Record<string, unknown> = { status };
-      if (status === 'closed') {
+      if (status === "closed") {
         update.closed_at = new Date().toISOString();
       }
 
       const { error } = await supabase
-        .from('polls')
+        .from("polls")
         .update(update)
-        .eq('id', pollId);
+        .eq("id", pollId);
 
       if (error) throw error;
     },
-    []
+    [],
   );
 
   const lookupByShareCode = useCallback(async (shareCode: string) => {
     const { data, error } = await supabase
-      .from('polls')
-      .select('*, candidates(*)')
-      .eq('share_code', shareCode.toUpperCase())
+      .from("polls")
+      .select("*, candidates(*)")
+      .eq("share_code", shareCode.toUpperCase())
       .single();
 
     if (error) throw error;

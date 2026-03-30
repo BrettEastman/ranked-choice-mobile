@@ -1,10 +1,7 @@
-import { useCallback } from 'react';
-import { supabase } from '../lib/supabase';
-import { useAuth } from '../providers/AuthProvider';
-import {
-  calculateWinner,
-  candidateNamesFromArray,
-} from '../lib/calculateWinner';
+import { useCallback } from "react";
+import { calculateWinner } from "../lib/calculateWinner";
+import { supabase } from "../lib/supabase";
+import { useAuth } from "../providers/AuthProvider";
 
 interface CandidateRow {
   id: string;
@@ -28,7 +25,7 @@ export function useVoting() {
    */
   const submitVote = useCallback(
     async (pollId: string, rankedCandidateIds: string[]) => {
-      if (!user) throw new Error('Must be signed in to vote');
+      if (!user) throw new Error("Must be signed in to vote");
 
       // Insert vote rows
       const voteRows = rankedCandidateIds.map((candidateId, index) => ({
@@ -39,21 +36,21 @@ export function useVoting() {
       }));
 
       const { error: voteError } = await supabase
-        .from('votes')
+        .from("votes")
         .insert(voteRows);
 
       if (voteError) throw voteError;
 
       // Mark participant as having voted
       const { error: updateError } = await supabase
-        .from('poll_participants')
+        .from("poll_participants")
         .update({ has_voted: true })
-        .eq('poll_id', pollId)
-        .eq('user_id', user.id);
+        .eq("poll_id", pollId)
+        .eq("user_id", user.id);
 
       if (updateError) throw updateError;
     },
-    [user]
+    [user],
   );
 
   /**
@@ -64,90 +61,85 @@ export function useVoting() {
       if (!user) return false;
 
       const { data } = await supabase
-        .from('poll_participants')
-        .select('has_voted')
-        .eq('poll_id', pollId)
-        .eq('user_id', user.id)
+        .from("poll_participants")
+        .select("has_voted")
+        .eq("poll_id", pollId)
+        .eq("user_id", user.id)
         .single();
 
       return data?.has_voted ?? false;
     },
-    [user]
+    [user],
   );
 
   /**
    * Compute results for a poll: fetch all votes, run the RCV algorithm,
    * and store the result in poll_results.
    */
-  const computeAndStoreResults = useCallback(
-    async (pollId: string) => {
-      // Fetch candidates
-      const { data: candidates, error: candError } = await supabase
-        .from('candidates')
-        .select('*')
-        .eq('poll_id', pollId)
-        .order('position');
+  const computeAndStoreResults = useCallback(async (pollId: string) => {
+    // Fetch candidates
+    const { data: candidates, error: candError } = await supabase
+      .from("candidates")
+      .select("*")
+      .eq("poll_id", pollId)
+      .order("position");
 
-      if (candError) throw candError;
+    if (candError) throw candError;
 
-      const candidateList = candidates as CandidateRow[];
+    const candidateList = candidates as CandidateRow[];
 
-      // Fetch all votes for this poll
-      const { data: votes, error: votesError } = await supabase
-        .from('votes')
-        .select('voter_id, candidate_id, rank')
-        .eq('poll_id', pollId)
-        .order('rank');
+    // Fetch all votes for this poll
+    const { data: votes, error: votesError } = await supabase
+      .from("votes")
+      .select("voter_id, candidate_id, rank")
+      .eq("poll_id", pollId)
+      .order("rank");
 
-      if (votesError) throw votesError;
+    if (votesError) throw votesError;
 
-      const voteList = votes as VoteRow[];
+    const voteList = votes as VoteRow[];
 
-      // Group votes into ballots (one ballot per voter)
-      const ballotMap = new Map<string, string[]>();
-      for (const vote of voteList) {
-        if (!ballotMap.has(vote.voter_id)) {
-          ballotMap.set(vote.voter_id, []);
-        }
-        ballotMap.get(vote.voter_id)!.push(vote.candidate_id);
+    // Group votes into ballots (one ballot per voter)
+    const ballotMap = new Map<string, string[]>();
+    for (const vote of voteList) {
+      if (!ballotMap.has(vote.voter_id)) {
+        ballotMap.set(vote.voter_id, []);
       }
+      ballotMap.get(vote.voter_id)!.push(vote.candidate_id);
+    }
 
-      const ballots = Array.from(ballotMap.values());
+    const ballots = Array.from(ballotMap.values());
 
-      // Build candidate name map
-      const candidateNames = new Map<string, string>();
-      for (const c of candidateList) {
-        candidateNames.set(c.id, c.name);
-      }
+    // Build candidate name map
+    const candidateNames = new Map<string, string>();
+    for (const c of candidateList) {
+      candidateNames.set(c.id, c.name);
+    }
 
-      // Run the algorithm
-      const result = calculateWinner(candidateNames, ballots);
+    // Run the algorithm
+    const result = calculateWinner(candidateNames, ballots);
 
-      // Store the result
-      const { error: resultError } = await supabase
-        .from('poll_results')
-        .insert({
-          poll_id: pollId,
-          winner_name: result.winner,
-          rounds_data: result.rounds,
-          total_votes: result.totalVotes,
-        });
+    // Store the result
+    const { error: resultError } = await supabase.from("poll_results").insert({
+      poll_id: pollId,
+      winner_name: result.winner,
+      rounds_data: result.rounds,
+      total_votes: result.totalVotes,
+    });
 
-      if (resultError) throw resultError;
+    if (resultError) throw resultError;
 
-      return result;
-    },
-    []
-  );
+    return result;
+  }, []);
 
   /**
    * Fetch stored results for a poll.
    */
   const fetchResults = useCallback(async (pollId: string) => {
     const { data, error } = await supabase
-      .from('poll_results')
-      .select('*')
-      .eq('poll_id', pollId)
+      .from("poll_results")
+      .select("*")
+      .eq("poll_id", pollId)
       .single();
 
     if (error) throw error;

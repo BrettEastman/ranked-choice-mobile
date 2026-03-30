@@ -1,17 +1,18 @@
-import React from 'react';
+import React from "react";
 import {
-  TouchableOpacity,
-  Text,
   StyleSheet,
-  ViewStyle,
+  Text,
   TextStyle,
-} from 'react-native';
-import { colors, spacing, fontSizes, fonts } from '../lib/constants';
+  TouchableOpacity,
+  ViewStyle,
+} from "react-native";
+import { spacing } from "../lib/constants";
+import { colors, fontSizes, fonts } from "../theme";
 
 interface ButtonProps {
   title: string;
   onPress: () => void;
-  variant?: 'primary' | 'secondary' | 'outline';
+  variant?: "primary" | "secondary" | "outline";
   disabled?: boolean;
   style?: ViewStyle;
 }
@@ -19,7 +20,7 @@ interface ButtonProps {
 export function Button({
   title,
   onPress,
-  variant = 'primary',
+  variant = "primary",
   disabled = false,
   style,
 }: ButtonProps) {
@@ -32,7 +33,7 @@ export function Button({
 
   const textStyle: TextStyle[] = [
     styles.text,
-    variant === 'outline' ? styles.outlineText : styles.filledText,
+    variant === "outline" ? styles.outlineText : styles.filledText,
     disabled && styles.disabledText,
   ].filter(Boolean) as TextStyle[];
 
@@ -53,8 +54,8 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.sm + 4,
     paddingHorizontal: spacing.lg,
     borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   primary: {
     backgroundColor: colors.primary,
@@ -63,7 +64,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.secondary,
   },
   outline: {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
     borderWidth: 2,
     borderColor: colors.primary,
   },
@@ -72,7 +73,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: fontSizes.md,
-    fontWeight: '600',
+    fontWeight: "600",
     fontFamily: fonts.body,
   },
   filledText: {

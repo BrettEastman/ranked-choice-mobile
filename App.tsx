@@ -1,13 +1,16 @@
-import React from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { NavigationContainer } from '@react-navigation/native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { StyleSheet, ActivityIndicator, View } from 'react-native';
-import { useFonts, CutiveMono_400Regular } from '@expo-google-fonts/cutive-mono';
-import { AuthProvider } from './src/providers/AuthProvider';
-import { RootNavigator } from './src/navigation/RootNavigator';
-import { colors } from './src/lib/constants';
+import {
+  CutiveMono_400Regular,
+  useFonts,
+} from "@expo-google-fonts/cutive-mono";
+import { NavigationContainer } from "@react-navigation/native";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { StatusBar } from "expo-status-bar";
+import React from "react";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { RootNavigator } from "./src/navigation/RootNavigator";
+import { AuthProvider } from "./src/providers/AuthProvider";
+import { colors } from "./src/theme";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -51,7 +54,7 @@ const styles = StyleSheet.create({
   },
   loading: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

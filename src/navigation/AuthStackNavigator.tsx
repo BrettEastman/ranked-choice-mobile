@@ -1,8 +1,8 @@
-import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { LoginScreen } from '../screens/auth/LoginScreen';
-import { SignUpScreen } from '../screens/auth/SignUpScreen';
-import { colors, fonts } from '../lib/constants';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import React from "react";
+import { LoginScreen } from "../screens/auth/LoginScreen";
+import { SignUpScreen } from "../screens/auth/SignUpScreen";
+import { colors, fonts } from "../theme";
 
 export type AuthStackParamList = {
   Login: undefined;
@@ -17,7 +17,8 @@ export function AuthStackNavigator() {
       screenOptions={{
         headerStyle: { backgroundColor: colors.primary },
         headerTintColor: colors.white,
-        headerTitleStyle: { fontWeight: '700', fontFamily: fonts.heading },
+        headerTitleStyle: { fontWeight: "700", fontFamily: fonts.header },
+        headerTitleAlign: "left",
       }}
     >
       <Stack.Screen
@@ -28,7 +29,7 @@ export function AuthStackNavigator() {
       <Stack.Screen
         name="SignUp"
         component={SignUpScreen}
-        options={{ title: 'Sign Up' }}
+        options={{ title: "Sign Up" }}
       />
     </Stack.Navigator>
   );

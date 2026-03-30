@@ -1,22 +1,23 @@
-import React from 'react';
-import { View, Text, StyleSheet, Alert } from 'react-native';
-import { Feather } from '@expo/vector-icons';
-import { Button } from '../../components/Button';
-import { useAuth } from '../../providers/AuthProvider';
-import { colors, spacing, fontSizes, fonts } from '../../lib/constants';
+import { Feather } from "@expo/vector-icons";
+import React from "react";
+import { Alert, StyleSheet, Text, View } from "react-native";
+import { Button } from "../../components/Button";
+import { spacing } from "../../lib/constants";
+import { useAuth } from "../../providers/AuthProvider";
+import { colors, fontSizes, fonts } from "../../theme";
 
 export function SettingsScreen() {
   const { user, signOut } = useAuth();
 
   const displayName =
-    user?.user_metadata?.display_name ?? user?.email ?? 'User';
+    user?.user_metadata?.display_name ?? user?.email ?? "User";
 
   const handleSignOut = () => {
-    Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
-      { text: 'Cancel', style: 'cancel' },
+    Alert.alert("Sign Out", "Are you sure you want to sign out?", [
+      { text: "Cancel", style: "cancel" },
       {
-        text: 'Sign Out',
-        style: 'destructive',
+        text: "Sign Out",
+        style: "destructive",
         onPress: () => signOut(),
       },
     ]);
@@ -47,10 +48,9 @@ export function SettingsScreen() {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Coming Soon</Text>
         <Text style={styles.text}>
-          • Share polls with a code or link{'\n'}
-          • Vote remotely from your own device{'\n'}
-          • Poll history & saved results{'\n'}
-          • Interactive result charts
+          • Share polls with a code or link{"\n"}• Vote remotely from your own
+          device{"\n"}• Poll history & saved results{"\n"}• Interactive result
+          charts
         </Text>
       </View>
 
@@ -58,11 +58,7 @@ export function SettingsScreen() {
         <Text style={styles.version}>Version 1.0.0</Text>
       </View>
 
-      <Button
-        title="Sign Out"
-        variant="secondary"
-        onPress={handleSignOut}
-      />
+      <Button title="Sign Out" variant="secondary" onPress={handleSignOut} />
     </View>
   );
 }
@@ -74,8 +70,8 @@ const styles = StyleSheet.create({
     padding: spacing.lg,
   },
   profileCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: colors.white,
     borderRadius: 12,
     padding: spacing.md,
@@ -86,8 +82,8 @@ const styles = StyleSheet.create({
     height: 52,
     borderRadius: 26,
     backgroundColor: colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginRight: spacing.md,
   },
   profileInfo: {
@@ -95,12 +91,12 @@ const styles = StyleSheet.create({
   },
   displayName: {
     fontSize: fontSizes.lg,
-    fontWeight: '700',
-    fontFamily: fonts.heading,
+    fontWeight: "700",
+    fontFamily: fonts.header,
     color: colors.gray[800],
   },
   email: {
-    fontSize: fontSizes.sm,
+    fontSize: fontSizes.sm - 2,
     fontFamily: fonts.body,
     color: colors.gray[500],
     marginTop: 2,
@@ -110,7 +106,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: fontSizes.lg,
-    fontWeight: '600',
+    fontWeight: "600",
     fontFamily: fonts.heading,
     color: colors.gray[800],
     marginBottom: spacing.sm,
@@ -125,6 +121,6 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.sm,
     fontFamily: fonts.body,
     color: colors.gray[400],
-    textAlign: 'center',
+    textAlign: "center",
   },
 });
