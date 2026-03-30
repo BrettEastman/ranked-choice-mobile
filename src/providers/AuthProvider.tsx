@@ -16,14 +16,7 @@ interface AuthContextType {
   signOut: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType>({
-  session: null,
-  user: null,
-  loading: true,
-  signUp: async () => ({ error: null }),
-  signIn: async () => ({ error: null }),
-  signOut: async () => {},
-});
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function useAuth() {
   const context = useContext(AuthContext);
@@ -62,10 +55,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const accessToken = params.get("access_token");
           const refreshToken = params.get("refresh_token");
           if (accessToken && refreshToken) {
-            await supabase.auth.setSession({
+            const { data, error } = await supabase.auth.setSession({
               access_token: accessToken,
               refresh_token: refreshToken,
             });
+            if (error) {
+              console.error("Failed to restore session from deep link:", error);
+            } else {
+              setSession(data.session);
+            }
           }
         }
       }
